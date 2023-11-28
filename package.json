@@ -1,0 +1,20 @@
+{
+  "name": "kube-sentry",
+  "version": "1.0.0",
+  "description": "Kubernetes Monitoring Toolkit",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_ENV=production nodemon server/server.ts",
+    "build": "NODE_ENV=production webpack",
+    "test": "jest"
+  },
+  "author": "KubeScope team",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^5.89.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "react": "^18.2.0"
+  }
+}
