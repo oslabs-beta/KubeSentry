@@ -1,7 +1,10 @@
+require('dotenv').config();
 const promMetrics = {};
 
 promMetrics.getSomething = (req, res) => {
-  fetch('http://localhost:31302/api/v1/query?query=my_custom_counter')
+  fetch(
+    `http://localhost:${process.env.NODEPORT}/api/v1/query?query=my_custom_counter`
+  )
     .then((data) => data.json())
     .then((data) => {
       console.log(data.data.result[0].metric.name);
