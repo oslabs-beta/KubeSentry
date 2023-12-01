@@ -3,15 +3,54 @@ const express = require('express');
 // const os = require('os');
 // const client = require('prom-client');
 const app = express();
-const PORT = 3000;
+const PORT = 8888;
+const k8s = require('@kubernetes/client-node');
 
 app.use(express.json());
+/****************************KUBERNETES *************************** */
+const kc = new k8s.KubeConfig();
+kc.loadFromDefault();
+const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
+console.log(kc);
+console.log(k8sApi);
+const main = async () => {
+  try {
+    const podsRes = await k8sApi.listPodForAllNamespaces('default');
+    console.log(podsRes.body.items);
+    console.log(
+      podsRes.body.items.map((element) => [
+        element.metadata.namespace,
+        element.metadata.name,
+        element.status.phase,
+      ])
+    );
+    // console.log(podsRes.body.items.map(element => element.status.phase));
+    const metricsClient = new k8s.Metrics(kc);
+    const podMetrics = await k8s.topPods(k8sApi, metricsClient);
+    const nodeMetrics = await k8s.topNodes(k8sApi, metricsClient);
+    console.log(
+      podMetrics.map((element) => [
+        'cpu usage',
+        element.CPU.CurrentUsage,
+        element.Pod.metadata.name,
+      ])
+    );
+    const nodeMem = (
+      (Number(nodeMetrics[0].Memory.RequestTotal) /
+        Number(nodeMetrics[0].Memory.Capacity)) *
+      100
+    ).toFixed(2);
+    console.log(`node memory usage ${nodeMem}%`);
+  } catch (err) {
+    console.error(err);
+  }
+};
+main();
 /**************************IMPORT ROUTERS********************************** */
 const metricsRouter = require('./Routers/metricsRouter');
 /**************************SERVING STATIC FILES**************************** */
 
 /**************************ENPOINT ACTIONS********************************* */
-
 //loading the home page
 app.get('/', (req, res) => {
   console.log('home');
