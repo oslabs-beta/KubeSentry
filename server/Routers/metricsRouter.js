@@ -27,5 +27,9 @@ router.get(
     res.status(200).json(res.locals.result);
   }
 );
+
+router.get('/kubePods', kubeMetrics.getPods, (req, res) => {
+  res.status(200).json(res.locals.pods);
+});
 /**********************EXPORT ROUTER**************** */
 module.exports = router;

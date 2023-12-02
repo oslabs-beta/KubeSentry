@@ -50,17 +50,27 @@ kubeMetrics.getNodeMem = (req, res, next) => {
   return next();
 };
 
-//ARRAY OF ['namespace', 'pod-name', 'status]
+//[{namespace:, pod-name: , status: },...]
 kubeMetrics.getPods = async (req, res, next) => {
   try {
     //get all the pods from our cluster
     const podsRes = await k8sApi.listPodForAllNamespaces();
     //ARRAY OF ['namespace', 'pod-name', 'status]
-    res.locals.pods = podsRes.body.items.map((element) => [
-      element.metadata.namespace,
-      element.metadata.name,
-      element.status.phase,
-    ]);
+    res.locals.pods = { pods: [], nameSpace: new Set() };
+    //pod objects
+    podsRes.body.items.forEach((el) => {
+      res.locals.pods.pods.push({
+        namespace: el.metadata.namespace,
+        name: el.metadata.name,
+        status: el.status.phase,
+      });
+      res.locals.pods.nameSpace.add(el.metadata.namespace);
+      //adding pod state counts
+      res.locals.pods[el.status.phase] =
+        ++res.locals.pods[el.status.phase] || 1;
+    });
+    //array of namespaces
+    res.locals.pods.nameSpace = [...res.locals.pods.nameSpace];
     return next();
   } catch (err) {
     return next({
