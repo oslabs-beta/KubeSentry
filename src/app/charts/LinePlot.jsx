@@ -27,7 +27,7 @@ import mock_data from "../../../build/mock_data.json";
 
 function LinePlotDisplay ({ data }) {
   const graphTextColor = 'rgba(255,255,255,0.75)';
-  const yAxisTitle = 'Y Axis';
+  const yAxisTitle = 'Data';
 
   const options = {
     plugins: {
@@ -67,7 +67,7 @@ function LinePlotDisplay ({ data }) {
         display: true,
         title: {
           display: true,
-          text: `X axis`,
+          text: 'Observation',
           color: 'rgba(255, 255, 255, 0.702)'
         }
       }

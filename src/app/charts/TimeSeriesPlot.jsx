@@ -32,7 +32,7 @@ import mock_data from "../../../build/mock_data.json";
 
 function TimeSeriesPlotDisplay ({ data }) {
   const graphTextColor = 'rgba(255,255,255,0.75)';
-  const yAxisTitle = 'Y Axis';
+  const yAxisTitle = 'Counter';
   const chartRef = useRef(null);
 
   const options = {
@@ -62,8 +62,8 @@ function TimeSeriesPlotDisplay ({ data }) {
         }
       },
       x: {
-        // type: 'timeseries',
         ticks: {
+          maxRotation: 20,
           color: graphTextColor
         },
         grid: {
@@ -73,13 +73,16 @@ function TimeSeriesPlotDisplay ({ data }) {
         display: true,
         title: {
           display: true,
-          text: `X axis`,
+          text: 'Time',
           color: 'rgba(255, 255, 255, 0.702)'
         },
         type: 'time',
-        // time: {
-        //   unit: 'seconds',
-        // },
+        time: {
+          unit: 'second',
+          displayFormats: {
+            second: 'HH:mm:ss'
+          }
+        }
       }
     }
   }

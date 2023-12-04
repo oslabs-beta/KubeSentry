@@ -5,20 +5,20 @@ import TimeSeriesPlot from '../charts/TimeSeriesPlot'
 
 
 export default function Page() {
-  const style = { width: "30%" };
+  const style = { width: "50%" };
 
   return (
   <>
     <h1>Sentry Dashboard</h1>
-    {/* <div style={style}>
-      <PieChart />
-    </div> */}
     <div style={style}>
       <TimeSeriesPlot />
     </div>
-    {/* <div style={style}>
+    <div style={style}>
       <LinePlot />
-    </div> */}
+    </div>
+    <div style={style}>
+      <PieChart />
+    </div>
   </>
   );
 }
