@@ -5,20 +5,16 @@ const router = express.Router();
 const kubeMetrics = require('../Controllers/kubeMetrics');
 const promMetrics = require('../Controllers/promMetrics');
 /**********************ROUTE ACTIONS**************** */
-router.get('/prom', (req, res) => {
-  fetch(`http://localhost:31302/api/v1/query?query=my_custom_counter`)
-    .then((data) => data.json())
-    .then((data) => {
-      res.locals.data = data.data.result[0];
-      console.log(data.data.result[0]);
-      res.status(200).json({
-        metrics: res.locals.data.metric.__name__,
-        value: res.locals.data.value[1],
-      });
-    })
-    .catch(() => res.send('i did not get the data'));
+//time series query : http://localhost:31302/api/v1/query_range?query=&start=&end=&step
+//job query: query?query={job=''}
+
+//MIGHT HAVE TO REFRESH A FEW TIMES TO GET DATA. IT WORKS I SWEAR!!!
+//prometheus data for our webapp(for now)
+router.get('/prom', promMetrics.getSomething, (req, res) => {
+  res.status(200).json(res.locals.data);
 });
 
+//Kubernetes node information
 router.get(
   '/kubeNodes',
   kubeMetrics.getNodeMetrics,
@@ -28,6 +24,7 @@ router.get(
   }
 );
 
+//kubernetes pod information
 router.get('/kubePods', kubeMetrics.getPods, (req, res) => {
   res.status(200).json(res.locals.pods);
 });

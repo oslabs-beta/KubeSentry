@@ -6,13 +6,15 @@ const k8s = require('@kubernetes/client-node');
 const kc = new k8s.KubeConfig();
 //loads the authentication data to our kubernetes object of our current cluster so it can talk to kube-apiserver
 kc.loadFromDefault();
-//creates a kubernetes api client with our auth data. : This is what is doing the talking.
+//creates a kubernetes api client with our auth data. : This is what is doing the talking to the Kube-Apiserer.
 const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
+//mertics-server
 const metricsClient = new k8s.Metrics(kc);
 
 //get the node metrics
 kubeMetrics.getNodeMetrics = async (req, res, next) => {
   try {
+    // console.log(kc);
     res.locals.topNodes = await k8s.topNodes(k8sApi, metricsClient);
     res.locals.nodeMetrics = await metricsClient.getNodeMetrics();
     return next();
@@ -28,10 +30,11 @@ kubeMetrics.getNodeMetrics = async (req, res, next) => {
 //{name:{memused: , capacity: , percentage: } , name2:{...},...}
 kubeMetrics.getNodeMem = (req, res, next) => {
   //get the memory used for each node: [['name', 'mem(in Kb)'],...]
+  console.log(res.locals.nodeMetrics.items);
   const memUsed = res.locals.nodeMetrics.items.map((el) => [
     //name of node
     el.metadata.name,
-    //memory usage of node
+    //memory usage of node comes in as '########ki'
     Number(el.usage.memory.slice(0, el.usage.memory.length - 2)),
   ]);
   console.log(memUsed);
@@ -42,7 +45,7 @@ kubeMetrics.getNodeMem = (req, res, next) => {
   //populate the result object
   for (let i = 0; i < memUsed.length; i++) {
     res.locals.result[memUsed[i][0]] = {
-      memUsed: memUsed[i][1],
+      'memUsed(kb)': memUsed[i][1],
       capacity: memCap[i][2],
       percentage: ((memUsed[i][1] / memCap[i]) * 100000).toFixed(2),
     };
