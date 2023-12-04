@@ -6,7 +6,7 @@ const PORT = 8888;
 app.use(express.json());
 /**************************IMPORT ROUTERS********************************** */
 
-const metricsRouter = require('./Routers/metricsRouter');
+import metricsRouter from './Routers/metricsRouter';
 
 /**************************SERVING STATIC FILES**************************** */
 //NONE BECAUSE WE ARE USING NEXT JS AS A SECONDARY SERVER

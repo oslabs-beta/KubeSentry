@@ -13,6 +13,10 @@ const k8sApi = kc.makeApiClient(CoreV1Api);
 //mertics-server
 const metricsClient = new Metrics(kc);
 
+
+
+
+
 //get the node metrics
 export const getNodeMetrics: RequestHandler = async(_, res, next) => {
   try {
@@ -66,19 +70,17 @@ export const getPods: RequestHandler = async (_, res, next) => {
     podsRes.body.items.forEach((el: V1Pod) => {
 
       if (el.metadata && el.status) {
-        if (el.status.phase !== undefined) {
-          const status: V1PodStatus = el.status.phase;
-        } status = el.status.phase?.toString();
-        // Todo: find a better way to handle this?
+        // Todo: find a better way to handle undefined values
+
+        const status: string = el.status.phase?.toString() || 'undefined';
+        // Keep track of pod counts by status bucket
+        res.locals.pods[status] = ++res.locals.pods[status] || 1;
         res.locals.pods.pods.push({
           namespace: el.metadata.namespace,
           name: el.metadata.name,
           status,
         });
         res.locals.pods.nameSpace.add(el.metadata.namespace);
-        //adding pod state counts
-        res.locals.pods[status] =
-          ++res.locals.pods[status] || 1;
       }
     else {
       // Not handled

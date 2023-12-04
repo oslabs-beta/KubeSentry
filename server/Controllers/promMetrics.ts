@@ -1,5 +1,4 @@
 require('dotenv').config();
-const promMetrics = {};
 import { RequestHandler } from 'express';
 
 //time series query : http://localhost:31302/api/v1/query_range?query=&start=&end=&step
