@@ -1,22 +1,15 @@
 const express = require('express');
-// const promBundle = require('express-prom-bundle');
-// const os = require('os');
-// const client = require('prom-client');
 const app = express();
-const PORT = 3000;
+const PORT = 8888;
 
 app.use(express.json());
 /**************************IMPORT ROUTERS********************************** */
+
 const metricsRouter = require('./Routers/metricsRouter');
+
 /**************************SERVING STATIC FILES**************************** */
-
+//NONE BECAUSE WE ARE USING NEXT JS AS A SECONDARY SERVER
 /**************************ENPOINT ACTIONS********************************* */
-
-//loading the home page
-app.get('/', (req, res) => {
-  console.log('home');
-  res.status(200).send('welcome to my awesome app!');
-});
 
 app.use('/metrics', metricsRouter);
 
