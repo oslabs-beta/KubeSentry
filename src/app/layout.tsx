@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import SideBar from './ui/sidebar';
+
 // These styles apply to every route in the application
 import './styles/globals.css';
 

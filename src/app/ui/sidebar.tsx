@@ -5,37 +5,59 @@ const sideBar = () => {
     <div className='flex h-full flex-col px-3 py-4 md:px-2'>
       <div className='flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2'>
         <div>
-          <Link href='/dashboard'>
-            <p className='ptags'>Home</p>
+          <Link
+            href='/dashboard'
+            // applies display flex
+            className='flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-blue-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3'
+          >
+            <p>Home</p>
           </Link>
         </div>
         <div>
-          <Link href='/dashboard/about'>
+          <Link
+            href='/dashboard/about'
+            className='flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3'
+          >
             <p>About</p>
           </Link>
         </div>
         <div>
-          <Link href='/dashboard/status'>
+          <Link
+            href='/dashboard/status'
+            className='flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3'
+          >
             <p>Status</p>
           </Link>
         </div>
         <div>
-          <Link href='/dashboard/resource'>
+          <Link
+            href='/dashboard/resource'
+            className='flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3'
+          >
             <p>Resource</p>
           </Link>
         </div>
         <div>
-          <Link href='/dashboard/report'>
+          <Link
+            href='/dashboard/report'
+            className='flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3'
+          >
             <p>Report</p>
           </Link>
         </div>
         <div>
-          <Link href='/dashboard/alert'>
+          <Link
+            href='/dashboard/alert'
+            className='flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3'
+          >
             <p>Alert</p>
           </Link>
         </div>
         <div>
-          <Link href='/dashboard/graph'>
+          <Link
+            href='/dashboard/graph'
+            className='flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3'
+          >
             <p>Graph</p>
           </Link>
         </div>
