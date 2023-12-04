@@ -1,6 +1,5 @@
 "use client";
 
-
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -23,11 +22,11 @@ ChartJS.register(
 );
 
 import { Line } from 'react-chartjs-2';
-import mock_data from "../../build/mock_data.json";
+import mock_data from "../../../build/mock_data.json";
 
 
-function TimeSeriesPlotDisplay ({ data }) {
-  const graphTextColor = 'black';
+function LinePlotDisplay ({ data }) {
+  const graphTextColor = 'rgba(255,255,255,0.75)';
   const yAxisTitle = 'Y Axis';
 
   const options = {
@@ -40,6 +39,7 @@ function TimeSeriesPlotDisplay ({ data }) {
       }
     },
     responsive: true,
+    animation: false,
     scales: {
       y: {
         ticks: {
@@ -76,13 +76,12 @@ function TimeSeriesPlotDisplay ({ data }) {
 
 
   const dataSet = {
-    labels: data.time,
+    labels: [...data.keys()],
     datasets: [{
-      label: 'Time Series Dataset',
-      data: data.counter,
+      label: 'Sequential Dataset',
+      data: data,
       fill: false,
       borderColor: 'rgb(75, 192, 192)',
-      tension: 0.1
     }]
   };
 
@@ -91,8 +90,9 @@ function TimeSeriesPlotDisplay ({ data }) {
 
 
 
-export default function TimeSeriesPlot() {
-  const {time, counter} = mock_data.counter_series;
-  return <TimeSeriesPlotDisplay data={{time, counter}} />
+export default function LinePlot() {
+  // Pull in data from somewhere else
+  return <LinePlotDisplay data={mock_data.ram_usage} />
+
 }
 

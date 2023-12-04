@@ -6,22 +6,20 @@ import { Doughnut } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-import mock_data from "../../build/mock_data.json";
-
 
 export default function PieChart() {
-  const colors = ["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c"];
+  const labels = [...Array(6).keys()].map(val => `Item${val}`);
 
   const options = {
     animation: false,
   }
 
   const chartData = {
-    labels: colors,
+    labels: labels,
     datasets: [
       {
         label: '# of Votes',
-        data: colors.map(c => Math.random()),
+        data: labels.map(c => Math.random()),
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           'rgba(54, 162, 235, 0.2)',
@@ -43,5 +41,5 @@ export default function PieChart() {
     ],
   };
 
-  return <Doughnut data={chartData} options={options}/>
+  return <Doughnut data={chartData} options={options} width={50} height={50}/>
 }

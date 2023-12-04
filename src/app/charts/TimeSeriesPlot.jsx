@@ -1,9 +1,13 @@
 "use client";
 
+import {useRef} from "react"
+import 'chartjs-adapter-date-fns';
+
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
+  TimeScale,
   PointElement,
   LineElement,
   Title,
@@ -16,18 +20,20 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  TimeScale,
   Title,
   Tooltip,
   Legend
 );
 
 import { Line } from 'react-chartjs-2';
-import mock_data from "../../build/mock_data.json";
+import mock_data from "../../../build/mock_data.json";
 
 
-function LinePlotDisplay ({ data }) {
-  const graphTextColor = 'black';
+function TimeSeriesPlotDisplay ({ data }) {
+  const graphTextColor = 'rgba(255,255,255,0.75)';
   const yAxisTitle = 'Y Axis';
+  const chartRef = useRef(null);
 
   const options = {
     plugins: {
@@ -39,7 +45,6 @@ function LinePlotDisplay ({ data }) {
       }
     },
     responsive: true,
-    animation: false,
     scales: {
       y: {
         ticks: {
@@ -57,6 +62,7 @@ function LinePlotDisplay ({ data }) {
         }
       },
       x: {
+        // type: 'timeseries',
         ticks: {
           color: graphTextColor
         },
@@ -69,31 +75,33 @@ function LinePlotDisplay ({ data }) {
           display: true,
           text: `X axis`,
           color: 'rgba(255, 255, 255, 0.702)'
-        }
+        },
+        type: 'time',
+        // time: {
+        //   unit: 'seconds',
+        // },
       }
     }
   }
 
 
   const dataSet = {
-    labels: [...data.keys()],
+    labels: data.time,
     datasets: [{
       label: 'Time Series Dataset',
-      data: data,
+      data: data.counter,
       fill: false,
       borderColor: 'rgb(75, 192, 192)',
-      tension: 0.1
     }]
   };
 
-  console.log("dataSet is:", dataSet)
-  console.log("making chart")
-  return ( <Line data={dataSet} options={options} /> )
+  return ( <Line data={dataSet} ref={chartRef} options={options} /> )
 };
 
 
 
-export default function LinePlot() {
-  return <LinePlotDisplay data={mock_data.ram_usage} width={800} height={500}/>;
+export default function TimeSeriesPlot() {
+  const {time, counter} = mock_data.counter_series;
+  return <TimeSeriesPlotDisplay data={{time, counter}} />
 }
 
