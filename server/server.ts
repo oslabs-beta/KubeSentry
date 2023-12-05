@@ -1,5 +1,5 @@
-import express, {Request, Response, NextFunction, RequestHandler } from 'express';
-import { ServerError } from "../types"
+import express, {Request, Response, ErrorRequestHandler } from 'express';
+import { ServerError } from './server-types'
 const app = express();
 const PORT = 8888;
 
@@ -19,7 +19,8 @@ app.use('*', (_: Request, res: Response): void => {
   res.status(404).send('unknown location');
 });
 /**************************GLOBAL ERROR HANDLER********************************** */
-app.use((err: ServerError, _: Request, res: Response, __: NextFunction): void => {
+
+const errHandler: ErrorRequestHandler = (err, _, res, __) => {
   const defaultErr: ServerError = {
     log: 'error in some middleware',
     status: 500,
@@ -29,7 +30,9 @@ app.use((err: ServerError, _: Request, res: Response, __: NextFunction): void =>
   const errorObj: ServerError = Object.assign(defaultErr, err);
   console.log(errorObj.log);
   res.status(errorObj.status).json(errorObj.message);
-});
+
+}
+app.use(errHandler);
 
 app.listen(PORT, () => {
   console.log(`app is listening on port ${PORT}`);

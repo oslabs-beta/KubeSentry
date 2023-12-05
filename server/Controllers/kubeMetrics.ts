@@ -52,7 +52,7 @@ export const getNodeMem: RequestHandler = async (_, res, next) => {
   for (let i = 0; i < memUsed.length; i++) {
     res.locals.result[memUsed[i][0]] = {
       'memUsed(kb)': memUsed[i][1],
-      capacity: memCap[i][2],
+      capacity: memCap[i],
       percentage: ((memUsed[i][1] / memCap[i]) * 100000).toFixed(2),
     };
   }
