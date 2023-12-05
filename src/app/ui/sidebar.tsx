@@ -7,8 +7,9 @@ const sideBar = () => {
         <div>
           <Link
             href='/dashboard'
-            // applies display flex
-            className='flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-blue-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3'
+            //flex, height 64px, grow: fill entire element space, justify-center: center on main axis, gap: 0.5rem between flexitems, rounded-md: border radius, bg: background color, p: padding 0.75rem,
+            //md: on medium size screens and larger (mid-width 768px)
+            className='flex h-16 grow items-center justify-center gap-2 rounded-md bg-secondaryDark p-3 text-sm font-medium hover:bg-thirdDark hover:text-white md:flex-none md:justify-start md:p-2 md:px-3'
           >
             <p>Home</p>
           </Link>
@@ -16,7 +17,7 @@ const sideBar = () => {
         <div>
           <Link
             href='/dashboard/about'
-            className='flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3'
+            className='flex h-16 grow items-center justify-center gap-2 rounded-md bg-secondaryDark p-3 text-sm font-medium hover:bg-thirdDark hover:text-white md:flex-none md:justify-start md:p-2 md:px-3'
           >
             <p>About</p>
           </Link>
@@ -24,7 +25,7 @@ const sideBar = () => {
         <div>
           <Link
             href='/dashboard/status'
-            className='flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3'
+            className='flex h-16 grow items-center justify-center gap-2 rounded-md bg-secondaryDark p-3 text-sm font-medium hover:bg-thirdDark hover:text-white md:flex-none md:justify-start md:p-2 md:px-3'
           >
             <p>Status</p>
           </Link>
@@ -32,7 +33,7 @@ const sideBar = () => {
         <div>
           <Link
             href='/dashboard/resource'
-            className='flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3'
+            className='flex h-16 grow items-center justify-center gap-2 rounded-md bg-secondaryDark p-3 text-sm font-medium hover:bg-thirdDark hover:text-white md:flex-none md:justify-start md:p-2 md:px-3'
           >
             <p>Resource</p>
           </Link>
@@ -40,7 +41,7 @@ const sideBar = () => {
         <div>
           <Link
             href='/dashboard/report'
-            className='flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3'
+            className='flex h-16 grow items-center justify-center gap-2 rounded-md bg-secondaryDark p-3 text-sm font-medium hover:bg-thirdDark hover:text-white md:flex-none md:justify-start md:p-2 md:px-3'
           >
             <p>Report</p>
           </Link>
@@ -48,7 +49,7 @@ const sideBar = () => {
         <div>
           <Link
             href='/dashboard/alert'
-            className='flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3'
+            className='flex h-16 grow items-center justify-center gap-2 rounded-md bg-secondaryDark p-3 text-sm font-medium hover:bg-thirdDark hover:text-white md:flex-none md:justify-start md:p-2 md:px-3'
           >
             <p>Alert</p>
           </Link>
@@ -56,12 +57,12 @@ const sideBar = () => {
         <div>
           <Link
             href='/dashboard/graph'
-            className='flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3'
+            className='flex h-16 grow items-center justify-center gap-2 rounded-md bg-secondaryDark p-3 text-sm font-medium hover:bg-thirdDark hover:text-white md:flex-none md:justify-start md:p-2 md:px-3'
           >
             <p>Graph</p>
           </Link>
         </div>
-        <div className='hidden h-auto w-full grow rounded-md bg-gray-50 md:block'></div>
+        <div className='hidden h-auto w-full grow rounded-md bg-secondaryDark md:block'></div>
       </div>
     </div>
   );
