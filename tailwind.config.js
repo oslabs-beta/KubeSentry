@@ -5,12 +5,12 @@ module.exports = {
   ],
   theme: {
     extend: {
-      gridTemplateColumns: {
-        13: 'repeat(13, minmax(0, 1fr))',
+      colors: {
+        primaryDark: '#202225',
+        secondaryDark: '#292b2f',
+        thirdDark: '#2f3136',
       },
     },
   },
   plugins: [],
 };
-
-
