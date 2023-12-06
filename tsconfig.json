@@ -42,7 +42,7 @@
     "src/app/dashboard/graph/page.jsx",
     "src/app/dashboard/report/page.jsx",
     "src/app/dashboard/resource/page.jsx",
-    "src/app/dashboard/layout.tsx",
+    "src/app/dashboard/layout.tsx"
   ],
   "exclude": [
     "node_modules"
