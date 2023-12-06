@@ -29,6 +29,7 @@
     "webpack": "^5.89.0"
   },
   "dependencies": {
+    "@heroicons/react": "^2.0.18",
     "@kubernetes/client-node": "^0.20.0",
     "chartjs-adapter-date-fns": "^3.0.0",
     "date-fns": "^2.30.0",
