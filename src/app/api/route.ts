@@ -1,4 +1,10 @@
-export async function GET(request: Request) {}
+import { NextResponse } from 'next/server';
+
+export async function GET(request: Request) {
+  let data = await fetch('http://localhost:8888/metrics/kubePods');
+  data = await data.json();
+  return NextResponse.json({ Running: data.Running, Pending: data.Pending });
+}
 
 export async function HEAD(request: Request) {}
 

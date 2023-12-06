@@ -1,25 +1,26 @@
-"use client";
-
+'use client';
 
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-
-export default function PieChart() {
-  const labels = [...Array(6).keys()].map(val => `Item${val}`);
+export default async function PieChart() {
+  let data = await fetch('http://localhost:3000/api', { cache: 'no-store' });
+  let jsondata = await data.json();
+  console.log(jsondata);
+  const labels = Object.keys(jsondata);
 
   const options = {
     animation: false,
-  }
+  };
 
   const chartData = {
     labels: labels,
     datasets: [
       {
         label: '# of Votes',
-        data: labels.map(c => Math.random()),
+        data: labels.map((c) => jsondata[c]),
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           'rgba(54, 162, 235, 0.2)',
@@ -41,5 +42,5 @@ export default function PieChart() {
     ],
   };
 
-  return <Doughnut data={chartData} options={options} width={50} height={50}/>
+  return <Doughnut data={chartData} options={options} width={50} height={50} />;
 }

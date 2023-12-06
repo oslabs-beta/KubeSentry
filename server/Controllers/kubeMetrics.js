@@ -87,7 +87,10 @@ kubeMetrics.getPods = async (req, res, next) => {
 kubeMetrics.getPodMetrics = async (req, res, next) => {
   try {
     res.locals.topPods = await k8s.topPods(k8sApi, metricsClient);
-    res.locals.podMetrics = await metricsClient.getPodMetrics();
+    response = await k8sApi.readNamespacedPodStatus('mitch-test4', 'default');
+    console.log(response.body);
+
+    //console.log(res.locals.podMetrics);
     return next();
   } catch {
     return next({
