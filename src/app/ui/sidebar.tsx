@@ -1,8 +1,23 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
+
+
 const sideBar = () => {
+  const appName = 'Kube Sentry'
+
   return (
     <div className='flex h-full flex-col px-3 py-4 md:px-2'>
+      <div className='logo-wrapper flex gap-5 items-center mb-4'>
+        <Image
+          className='ml-3' 
+          src='/kubesentrylogo.png'
+          alt='Kubesentry logo'
+          width={80}
+          height={80}
+        />
+        <div className='font-bold text-lg text-blue-400'>{appName}</div>
+      </div>
       <div className='flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2'>
         <div>
           <Link
