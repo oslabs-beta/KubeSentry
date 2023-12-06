@@ -8,7 +8,6 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function PieChart(labels = []) {
   const [piedata, setPieData] = useState({});
-  const [intervalID, setIntervalID] = useState(null);
   const didMountRef = useRef(false);
 
   //console.log('re-render', intervalID);
@@ -45,7 +44,7 @@ export default function PieChart(labels = []) {
       getData().then((data) => {
         console.log(piedata, data);
         if (!objCompare(data, piedata)) {
-          console.log('yes');
+          // console.log('updating data');
           setPieData(Object.assign({}, data));
         }
       });
