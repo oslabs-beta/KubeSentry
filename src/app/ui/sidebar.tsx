@@ -53,7 +53,13 @@ const sideBar = () => {
             href='/dashboard/report'
             className='flex h-12 grow items-center justify-center gap-2 rounded-md bg-secondaryDark p-3 text-sm font-medium hover:bg-thirdDark hover:text-white md:flex-none md:justify-start md:p-2 md:px-3'
           >
-            
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="rgb(200,200,200)" viewBox="0 0 22 22">
+              <rect x="2" y="2" width="18" height="18" rx="2" ry="2" stroke="none" />
+              <line x1="4" y1="7" x2="18" y2="7" stroke="black" stroke-width="1" />
+              <line x1="4" y1="10" x2="18" y2="10" stroke="black" stroke-width="1" />
+              <line x1="4" y1="13" x2="18" y2="13" stroke="black" stroke-width="1" />
+              <line x1="4" y1="16" x2="18" y2="16" stroke="black" stroke-width="1" />
+            </svg>
             <p>Report</p>
           </Link>
         </div>
@@ -62,6 +68,11 @@ const sideBar = () => {
             href='/dashboard/alert'
             className='flex h-12 grow items-center justify-center gap-2 rounded-md bg-secondaryDark p-3 text-sm font-medium hover:bg-thirdDark hover:text-white md:flex-none md:justify-start md:p-2 md:px-3'
           >
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+              <circle cx="11" cy="11" r="10" stroke="rgb(200, 200, 200)" stroke-width="2" fill="none"/>
+              <line x1="11" y1="7" x2="11" y2="13" stroke="rgb(200, 200, 200)" stroke-width="2"/>
+              <line x1="11" y1="16" x2="11" y2="17" stroke="rgb(200, 200, 200)" stroke-width="2"/>
+            </svg>
             <p>Alert</p>
           </Link>
         </div>
@@ -70,6 +81,11 @@ const sideBar = () => {
             href='/dashboard/graph'
             className='flex h-12 grow items-center justify-center gap-2 rounded-md bg-secondaryDark p-3 text-sm font-medium hover:bg-thirdDark hover:text-white md:flex-none md:justify-start md:p-2 md:px-3'
           >
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="rgb(200,200,200)" viewBox="0 0 22 22">
+              <rect x="2" y="10" width="4" height="10" />
+              <rect x="8" y="6" width="4" height="14" />
+              <rect x="14" y="2" width="4" height="18" />
+            </svg>
             <p>Graph</p>
           </Link>
         </div>
