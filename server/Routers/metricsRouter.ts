@@ -1,37 +1,32 @@
-const express = require('express');
-const router = express.Router();
+import { Router, Request, Response } from 'express';
+const router = Router();
 
 /**********************IMPORT CONTROLLERS**************** */
-const kubeMetrics = require('../Controllers/kubeMetrics');
-const promMetrics = require('../Controllers/promMetrics');
+import { getNodeMetrics, getNodeMem, getPods } from '../Controllers/kubeMetrics';
+import { getSomething } from '../Controllers/promMetrics';
 /**********************ROUTE ACTIONS**************** */
 //time series query : http://localhost:31302/api/v1/query_range?query=&start=&end=&step
 //job query: query?query={job=''}
 
 //MIGHT HAVE TO REFRESH A FEW TIMES TO GET DATA. IT WORKS I SWEAR!!!
 //prometheus data for our webapp(for now)
-router.get('/prom', promMetrics.getSomething, (req, res) => {
+router.get('/prom', getSomething, (_, res: Response) => {
   res.status(200).json(res.locals.data);
 });
 
 //Kubernetes node information
 router.get(
   '/kubeNodes',
-  kubeMetrics.getNodeMetrics,
-  kubeMetrics.getNodeMem,
-  (req, res) => {
+  getNodeMetrics,
+  getNodeMem,
+  (_, res) => {
     res.status(200).json(res.locals.result);
   }
 );
 
 //kubernetes pod information
-router.get(
-  '/kubePods',
-  // kubeMetrics.getPodMetrics,
-  kubeMetrics.getPods,
-  (req, res) => {
-    res.status(200).json(res.locals.pods);
-  }
-);
+router.get('/kubePods', getPods, (_, res) => {
+  res.status(200).json(res.locals.pods);
+});
 /**********************EXPORT ROUTER**************** */
-module.exports = router;
+export default router;
