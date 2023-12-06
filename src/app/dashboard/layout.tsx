@@ -1,11 +1,17 @@
-import React from 'react';
+'use client'
+import React, { useState } from 'react';
 import Sidebar from '@/src/app/ui/sidebar';
 import Banner from '../components/Banner';
 
+
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const [showbanner,setShowBanner] = useState(true)
+  function closeBanner(){
+    setShowBanner(false)
+  }
   return (
-    <>
-      <Banner />
+    <> 
+      {showbanner && <Banner closeBanner={closeBanner}/>}
       <div className='flex h-screen flex-col md:flex-row md:overflow-hidden bg-primaryDark text-slate-400'>
         <div className='w-full flex-none md:w-64'>
           <Sidebar />

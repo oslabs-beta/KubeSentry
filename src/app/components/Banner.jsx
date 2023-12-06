@@ -1,6 +1,6 @@
 import { XMarkIcon } from '@heroicons/react/20/solid'
 
-export default function Banner() {
+export default function Banner({closeBanner}) {
   return (
     <div className="relative isolate flex items-center gap-x-6 overflow-hidden bg-gray-50 px-6 py-2.5 sm:px-3.5 sm:before:flex-1">
       <div
@@ -46,7 +46,10 @@ export default function Banner() {
         </a>
       </div>
       <div className="flex flex-1 justify-end">
-        <button type="button" className="-m-3 p-3 focus-visible:outline-offset-[-4px]">
+        <button 
+          type="button" 
+          className="-m-3 p-3 focus-visible:outline-offset-[-4px]"
+          onClick={closeBanner}>
           <span className="sr-only">Dismiss</span>
           <XMarkIcon className="h-5 w-5 text-gray-900" aria-hidden="true" />
         </button>
