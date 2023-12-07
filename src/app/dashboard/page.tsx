@@ -2,10 +2,9 @@
 import React, { useState, ChangeEvent } from 'react';
 import SearchBar from '../components/Searchbar';
 
-import LinePlot from '../charts/LinePlot'
-import PieChart from '../charts/PieChart'
-import TimeSeriesPlot from '../charts/TimeSeriesPlot'
-
+import LinePlot from '../charts/LinePlot';
+import PieChart from '../charts/PieChart';
+import TimeSeriesPlot from '../charts/TimeSeriesPlot';
 
 export default function Page() {
   //set state and function to handle change in search input
@@ -21,9 +20,7 @@ export default function Page() {
     setSearchQuery('');
   }
 
-
-  const style = { width: "50%" };
-
+  const style = { width: '50%' };
 
   return (
     <div className='bg-secondaryDark rounded-md text-white min-h-screen p-8'>
@@ -32,15 +29,19 @@ export default function Page() {
         onChange={handleSearch}
         onSearch={handleSearchButtonClick}
       />
-      <h1 className="text-3xl font-bold mt-4">Sentry Dashboard</h1>
-      <div style={style}>
-        <TimeSeriesPlot />
+      <h1 className='text-3xl font-bold mt-4'>Sentry Dashboard</h1>
+      <div className='flex flex-column'>
+        <div style={style}>
+          <TimeSeriesPlot />
+        </div>
+        <div style={style}>
+          <LinePlot />
+        </div>
       </div>
-      <div style={style}>
-        <LinePlot />
-      </div>
-      <div style={style}>
-        <PieChart />
+      <div className='flex flow-row justify-center'>
+        <div style={style}>
+          <PieChart />
+        </div>
       </div>
     </div>
   );
