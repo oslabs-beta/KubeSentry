@@ -5,10 +5,11 @@
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
+    "noImplicitAny": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
@@ -27,6 +28,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
+    "./server-types.d.ts",
     "src/app/layout.jsx",
     "src/app/app.jsx",
     "src/app/dashboard/about/page.jsx",
@@ -34,7 +36,8 @@
     "src/app/dashboard/pods/page.jsx",
     "src/app/dashboard/report/page.jsx",
     "src/app/dashboard/resource/page.jsx",
-    "src/app/dashboard/layout.tsx"
+    "src/app/dashboard/layout.tsx",
+    "src/app/ui/sidebar.tsx"
   ],
   "exclude": ["node_modules"]
 }
