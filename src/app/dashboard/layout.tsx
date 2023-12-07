@@ -4,27 +4,24 @@ import Sidebar from "@/src/app/ui/sidebar";
 import Banner from "../components/Banner";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  let initialBanner = false;
+  let initialBanner = true;
   //the first time user come to the page localstorage is gonna be empty.
   // we are making sure that user can always see the banner the first time he visit and then after he close it and refresh he will not see it again
 
   // localStorage is only defined on the client.
   // Wrap in useEffect to ensure it doesn't run on the server.
-  let closeBanner = () => {}; // Dummy function
+  if ((typeof window !== 'undefined') && localStorage.getItem("userCloseBanner")) {
+    initialBanner = false;
+  }
+  const [showbanner, setShowBanner] = useState(initialBanner);
 
-  useEffect(() => {
-    initialBanner = true;
-    if (localStorage.getItem("userCloseBanner")) {
-      initialBanner = false;
-    }
-    closeBanner = () => {
-      setShowBanner(false);
+  const closeBanner = () => {
+    setShowBanner(false);
+    if ((typeof window !== 'undefined')) {
       localStorage.setItem("userCloseBanner", "true");
     }
-    setShowBanner(initialBanner);
-  }, [])
+  }
 
-  const [showbanner, setShowBanner] = useState(initialBanner);
   return (
     <>
       {showbanner && <Banner closeBanner={closeBanner} />}
