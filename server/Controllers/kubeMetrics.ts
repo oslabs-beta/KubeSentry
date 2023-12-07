@@ -1,10 +1,18 @@
 require('dotenv').config();
 import { RequestHandler } from 'express';
 
-
-
 //creates a Kubernetes cluster object
-import { KubeConfig, CoreV1Api, Metrics, topNodes, topPods, SingleNodeMetrics, V1Pod, NodeStatus, V1PodStatus } from '@kubernetes/client-node';
+import {
+  KubeConfig,
+  CoreV1Api,
+  Metrics,
+  topNodes,
+  topPods,
+  SingleNodeMetrics,
+  V1Pod,
+  NodeStatus,
+  V1PodStatus,
+} from '@kubernetes/client-node';
 const kc = new KubeConfig();
 //loads the authentication data to our kubernetes object of our current cluster so it can talk to kube-apiserver
 kc.loadFromDefault();
@@ -13,12 +21,8 @@ const k8sApi = kc.makeApiClient(CoreV1Api);
 //mertics-server
 const metricsClient = new Metrics(kc);
 
-
-
-
-
 //get the node metrics
-export const getNodeMetrics: RequestHandler = async(_, res, next) => {
+export const getNodeMetrics: RequestHandler = async (_, res, next) => {
   try {
     // console.log(kc);
     res.locals.topNodes = await topNodes(k8sApi);
@@ -45,7 +49,9 @@ export const getNodeMem: RequestHandler = async (_, res, next) => {
   ]);
   console.log(memUsed);
   //get the memory capacity of each node (in Mb)
-  const memCap = res.locals.topNodes.map((el: NodeStatus) => Number(el.Memory.Capacity));
+  const memCap = res.locals.topNodes.map((el: NodeStatus) =>
+    Number(el.Memory.Capacity)
+  );
   //initialize the result object
   res.locals.result = {};
   //populate the result object
@@ -68,7 +74,6 @@ export const getPods: RequestHandler = async (_, res, next) => {
     res.locals.pods = { pods: [], nameSpace: new Set() };
     //pod objects
     podsRes.body.items.forEach((el: V1Pod) => {
-
       if (el.metadata && el.status) {
         // Todo: find a better way to handle undefined values
 
@@ -81,11 +86,10 @@ export const getPods: RequestHandler = async (_, res, next) => {
           status,
         });
         res.locals.pods.nameSpace.add(el.metadata.namespace);
+      } else {
+        // Not handled
+        return;
       }
-    else {
-      // Not handled
-      return;
-    }
     });
     //array of namespaces
     res.locals.pods.nameSpace = [...res.locals.pods.nameSpace];
@@ -103,6 +107,29 @@ export const getPodMetrics: RequestHandler = async (_, res, next) => {
   try {
     res.locals.topPods = await topPods(k8sApi, metricsClient);
     res.locals.podMetrics = await metricsClient.getPodMetrics();
+    return next();
+  } catch (err) {
+    return next({
+      log: 'could not get pod Metrics from middleware',
+      status: 400,
+      message: { err },
+    });
+  }
+};
+
+export const deletePod: RequestHandler = async (req, res, next) => {
+  try {
+    const { name, namespace } = req.params;
+    console.log('we are in the server server', name, namespace);
+    res.locals.deletedpod = await k8sApi.deleteNamespacedPod(
+      name,
+      namespace,
+      undefined,
+      undefined,
+      2
+    );
+    // res.locals.podMetrics = await metricsClient.getPodMetrics();
+    console.log('finished deleting');
     return next();
   } catch (err) {
     return next({
