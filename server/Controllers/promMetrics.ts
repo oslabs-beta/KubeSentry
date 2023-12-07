@@ -12,7 +12,7 @@ export const getSomething: RequestHandler = async (_, res, next) => {
     let end = new Date();
     //range of query (mintues) :1min * 1000ms/s * 60s/min
     let start = new Date();
-    start.setMinutes(end.getMinutes()-10)
+    start.setMinutes(end.getMinutes() - 10);
     //range query string to append to base prom fetch
     let queryString = `&start=${start.toISOString()}&end=${end.toISOString()}&step=${step}`;
     //fetch prometheus
@@ -36,4 +36,3 @@ export const getSomething: RequestHandler = async (_, res, next) => {
     });
   }
 };
-
