@@ -16,6 +16,10 @@ export default function Page() {
     const responseData = await fetchData();
     setPods(responseData);
   };
+  
+  const handleClick = () => {
+
+  };
 
   useEffect(() => {
     fetchPod();
@@ -30,13 +34,20 @@ export default function Page() {
   for (let i = 0; i < pods.length; i++) {
     podsArray.push(
       <div>
-        <PodCard podName={pods[i]['name']} />
+        <PodCard
+          podName={pods[i]['name']}
+          podStatus={pods[i]['status']}
+          nameSpace={pods[i]['namespace']}
+          handleClick={handleClick}
+        />
       </div>
     );
   }
   return (
     <div>
-      <div className='grid grid-cols-4 gap-4'>{podsArray}</div>
+      <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+        {podsArray}
+      </div>
     </div>
   );
 }
