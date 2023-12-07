@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -23,9 +19,7 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     }
   },
   "include": [
@@ -37,12 +31,10 @@
     "src/app/app.jsx",
     "src/app/dashboard/about/page.jsx",
     "src/app/dashboard/alert/page.jsx",
-    "src/app/dashboard/graph/page.jsx",
+    "src/app/dashboard/pods/page.jsx",
     "src/app/dashboard/report/page.jsx",
     "src/app/dashboard/resource/page.jsx",
     "src/app/dashboard/layout.tsx"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

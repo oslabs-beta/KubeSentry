@@ -56,10 +56,10 @@ const sideBar = () => {
         </div>
         <div>
           <Link
-            href='/dashboard/graph'
+            href='/dashboard/pods'
             className='flex h-16 grow items-center justify-center gap-2 rounded-md bg-secondaryDark p-3 text-sm font-medium hover:bg-thirdDark hover:text-white md:flex-none md:justify-start md:p-2 md:px-3'
           >
-            <p>Graph</p>
+            <p>Pods</p>
           </Link>
         </div>
         <div className='hidden h-auto w-full grow rounded-md bg-secondaryDark md:block'></div>
