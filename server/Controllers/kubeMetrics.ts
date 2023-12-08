@@ -1,7 +1,6 @@
 require('dotenv').config();
 import { RequestHandler } from 'express';
 
-//creates a Kubernetes cluster object
 import {
   KubeConfig,
   CoreV1Api,
@@ -11,8 +10,9 @@ import {
   SingleNodeMetrics,
   V1Pod,
   NodeStatus,
-  V1PodStatus,
 } from '@kubernetes/client-node';
+
+//creates a Kubernetes cluster object
 const kc = new KubeConfig();
 //loads the authentication data to our kubernetes object of our current cluster so it can talk to kube-apiserver
 kc.loadFromDefault();
@@ -119,8 +119,9 @@ export const getPodMetrics: RequestHandler = async (_, res, next) => {
 
 export const deletePod: RequestHandler = async (req, res, next) => {
   try {
+    //extract name and namespace from endpoint
     const { name, namespace } = req.params;
-    console.log('we are in the server server', name, namespace);
+    //delete pod using kubernetes client method
     res.locals.deletedpod = await k8sApi.deleteNamespacedPod(
       name,
       namespace,
@@ -128,10 +129,10 @@ export const deletePod: RequestHandler = async (req, res, next) => {
       undefined,
       2
     );
-    // res.locals.podMetrics = await metricsClient.getPodMetrics();
-    console.log('finished deleting');
+    //move to next middleware
     return next();
   } catch (err) {
+    //route to global error handler
     return next({
       log: 'could not get pod Metrics from middleware',
       status: 400,

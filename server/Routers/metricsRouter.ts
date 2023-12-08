@@ -29,8 +29,10 @@ router.get('/kubePods', getPods, (_, res) => {
   res.status(200).json(res.locals.pods);
 });
 
+//delete a pod from cluster
 router.get('/delete/:namespace/:name', deletePod, (req, res) => {
   res.status(200).json(res.locals.deletedpod);
 });
+
 /**********************EXPORT ROUTER**************** */
 export default router;
