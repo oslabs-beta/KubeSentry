@@ -3,6 +3,8 @@
 import 'chartjs-adapter-date-fns';
 import { useState, useEffect, useRef } from 'react';
 
+import { PromMetricsData } from '../../../types/types'
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -117,7 +119,9 @@ export default function TimeSeriesPlot() {
       const response = await fetch('http://localhost:3000/charts/api', {
         cache: 'no-store',
       });
+      console.log('Getting Response...')
       let jsondata: PromMetricsData = await response.json();
+      console.log('Got response')
       const { value } = jsondata;
       //only update if we get something back from prometheus
       if (value) {

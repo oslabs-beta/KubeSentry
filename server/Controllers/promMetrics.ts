@@ -1,30 +1,46 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
 import { RequestHandler } from 'express';
+import { runPromQuery, buildDateString } from '../Models/prometheusModel'
 
-//time series query : http://localhost:31302/api/v1/query_range?query=&start=&end=&step
-//job query: query?query={job=''}
-//{metrics: '' , values[[time,counter],[]....]}
+const defaultRange = buildDateString();
+
 export const getCustomCounter: RequestHandler = async (_, res, next) => {
   try {
-    //interval of data
-    let step = '10s';
-    //current time
-    let end = new Date();
-    //range of query (mintues) :1min * 1000ms/s * 60s/min
-    let start = new Date();
-    start.setMinutes(end.getMinutes() - 10);
-    //range query string to append to base prom fetch
-    let queryString = `&start=${start.toISOString()}&end=${end.toISOString()}&step=${step}`;
-    //fetch prometheus
-    const data = await fetch(
-      `http://localhost:${process.env.PROMETHEUS_PORT}/api/v1/query_range?query=my_custom_counter${queryString}`
-    );
-    const result = await data.json(); // TODO: Type
-    //set response data object
+
+    const counter_result = await(runPromQuery('my_custom_counter', defaultRange))
+    console.log('counter_result: ', counter_result)
+
+    console.dir(counter_result.data.result);
+
+    // console.log('Fetch result: ', result)
+    // TODO: check that we got something usable
     res.locals.counterData = {
-      metrics: result.data.result[0].metric.__name__,
-      value: result.data.result[0].values,
+      metrics: counter_result.data.result[0].metric.__name__,
+      value: counter_result.data.result[0].values,
+    };
+    //go to next middleware
+    console.log('Finished getting data')
+    return next();
+  } catch (err) {
+    //route to global error
+    return next({
+      log: `error in promQuery. Error: ${err}`,
+      status: 400,
+      message: { err: 'could not get prom data' },
+    });
+  }
+};
+
+
+export const getDNSMetrics: RequestHandler = async (_, res, next) => {
+
+  try {
+
+    const dnsQuery = 'sum(rate(coredns_dns_requests_total[2m]))';
+    const dns_result = await runPromQuery(dnsQuery, defaultRange);
+    console.log('dns_data: ', dns_result)
+    res.locals.counterData = {
+      metrics: dns_result.data.result[0].metric.__name__,
+      value: dns_result.data.result[0].values,
     };
     //go to next middleware
     return next();
@@ -36,4 +52,4 @@ export const getCustomCounter: RequestHandler = async (_, res, next) => {
       message: { err: 'could not get prom data' },
     });
   }
-};
+}
