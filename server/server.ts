@@ -1,5 +1,5 @@
 import express, {Request, Response, ErrorRequestHandler } from 'express';
-import { ServerError } from './server-types'
+import { ServerError } from './types/server-types'
 const app = express();
 const PORT = 8888;
 
