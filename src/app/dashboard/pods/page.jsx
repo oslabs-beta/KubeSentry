@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 const fetchData = async () => {
   const response = await fetch('http://localhost:3000/podapi');
   const data = await response.json();
-  console.log(data['pods'][0]);
+  // console.log(data['pods'][0]);
   return data['pods'];
 };
 export default function Page() {
@@ -16,15 +16,22 @@ export default function Page() {
     const responseData = await fetchData();
     setPods(responseData);
   };
-  
-  const handleClick = () => {
 
+  const handleClick = async (name, namespace) => {
+    console.log(name, namespace);
+    const data = await fetch('http://localhost:3000/podapi', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, namespace: namespace }),
+    });
+    const result = await data.json();
+    console.log(result);
   };
 
   useEffect(() => {
     fetchPod();
 
-    const intervalId = setInterval(fetchPod, 10000);
+    const intervalId = setInterval(fetchPod, 3000);
 
     return () => {
       clearInterval(intervalId);
@@ -45,7 +52,7 @@ export default function Page() {
   }
   return (
     <div>
-      <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {podsArray}
       </div>
     </div>
