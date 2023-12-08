@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 
-export async function GET(request: Request) {
-  let data = await fetch('http://localhost:8888/metrics/kubePods', {
+export async function GET(request: Request): Promise<KubePodsStatus> {
+  let res = await fetch('http://localhost:8888/metrics/kubePods', {
     cache: 'no-store',
   });
-  data = await data.json();
+  let data: KubePodsStatus = await res.json();
   return NextResponse.json({ Running: data.Running, Pending: data.Pending });
 }
 
