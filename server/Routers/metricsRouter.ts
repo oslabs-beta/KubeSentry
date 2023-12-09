@@ -18,7 +18,7 @@ import { getCustomCounter } from '../Controllers/promMetrics';
 router.get('/prom',
   getCustomCounter,
   (_, res: Response) => {
-  res.status(200).json(res.locals.data);
+  res.status(200).json(res.locals.counterData);
 });
 
 //Kubernetes node information

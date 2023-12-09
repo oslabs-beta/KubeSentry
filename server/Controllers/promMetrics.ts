@@ -17,11 +17,12 @@ export const getCustomCounter: RequestHandler = async (_, res, next) => {
     //range query string to append to base prom fetch
     let queryString = `&start=${start.toISOString()}&end=${end.toISOString()}&step=${step}`;
     //fetch prometheus
-    const prom_route = `http://localhost:${process.env.PROMETHEUS_PORT}/api/v1/query_range?query=my_custom_counter${queryString}`
-    const data = await fetch(prom_route);
-    const result = await data.json();
+    const data = await fetch(
+      `http://localhost:${process.env.PROMETHEUS_PORT}/api/v1/query_range?query=my_custom_counter${queryString}`
+    );
+    const result = await data.json(); // TODO: Type
     //set response data object
-    res.locals.data = {
+    res.locals.counterData = {
       metrics: result.data.result[0].metric.__name__,
       value: result.data.result[0].values,
     };
