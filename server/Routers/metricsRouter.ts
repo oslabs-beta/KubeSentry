@@ -7,6 +7,7 @@ import {
   getNodeMem,
   getPods,
   deletePod,
+  podLogs,
 } from '../Controllers/kubeMetrics';
 import { getCustomCounter } from '../Controllers/promMetrics';
 /**********************ROUTE ACTIONS**************** */
@@ -36,5 +37,8 @@ router.get('/delete/:namespace/:name', deletePod, (req, res) => {
   res.status(200).json(res.locals.deletedpod);
 });
 
+router.get('/getlogs/:namespace/:name', podLogs, (req, res) => {
+  res.status(200).json(res.locals.podLogs);
+});
 /**********************EXPORT ROUTER**************** */
 export default router;

@@ -160,3 +160,17 @@ export const deletePod: RequestHandler = async (req, res, next) => {
     });
   }
 };
+
+//readNamespacedEvent
+//listNamespacedEvent
+export const podLogs: RequestHandler = async (req, res, next) => {
+  const { name, namespace } = req.params;
+  res.locals.podLogs = await k8sApi.listNamespacedEvent(
+    namespace,
+    undefined,
+    undefined
+  );
+  console.log(res.locals.podLogs.body.items);
+  res.locals.podLogs = res.locals.podLogs.body.items;
+  return next();
+};
