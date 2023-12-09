@@ -12,8 +12,8 @@
     "noImplicitAny": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
@@ -24,26 +24,19 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "*": [
+        "../types/server-types.ts"
+      ],
+      "@/*": [
+        "./*"
+      ]
     }
   },
   "include": [
-    "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts",
-    "src/app/layout.tsx",
-    "src/app/app.tsx",
-    "src/app/not-found.tsx",
-    "src/app/layout.tsx",
-    "src/app/error.tsx",
-    "src/app/dashboard/about/page.tsx",
-    "src/app/dashboard/alert/page.tsx",
-    "src/app/dashboard/graph/page.tsx",
-    "src/app/dashboard/report/page.tsx",
-    "src/app/dashboard/resource/page.tsx",
-    "src/app/dashboard/layout.tsx",
-    "src/app/ui/sidebar.tsx",
+    "server.d.ts",
+    "./types/server-types.ts"
   ],
   "exclude": [
     "node_modules"

@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 
-export async function GET(request: Request) {
-  let data = await fetch('http://localhost:8888/metrics/prom', {
+export async function GET(request: Request) : Promise<PromMetricsData> {
+  let res = await fetch('http://localhost:8888/metrics/prom', {
     cache: 'no-store',
   });
-  data = await data.json();
+  let data: PromMetricsData = await res.json();
   return NextResponse.json(data);
 }
 
