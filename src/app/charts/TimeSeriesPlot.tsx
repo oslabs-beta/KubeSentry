@@ -30,7 +30,7 @@ import { Line } from 'react-chartjs-2';
 import mock_data from '../../../build/mock_data.json';
 
 type timedata = {
-  time: string[];
+  time: Date[];
   counter: number[];
 };
 
@@ -81,9 +81,9 @@ function TimeSeriesPlotDisplay(data: timedata) {
           text: 'Time',
           color: 'rgba(255, 255, 255, 0.702)',
         },
-        type: 'time',
+        type: 'time' as const,
         time: {
-          unit: 'second',
+          unit: 'second' as const,
           displayFormats: {
             second: 'HH:mm:ss',
           },
@@ -108,22 +108,22 @@ function TimeSeriesPlotDisplay(data: timedata) {
 }
 
 export default function TimeSeriesPlot() {
-  const [time, setTime] = useState<string[]>([]);
+  const [time, setTime] = useState<Date[]>([]);
   const [counter, setCounter] = useState<number[]>([]);
   //const didMountRef = useRef(false);
 
   useEffect(() => {
     const id = setInterval(async () => {
-      const fetchdata = await fetch('http://localhost:3000/charts/api', {
+      const response = await fetch('http://localhost:3000/charts/api', {
         cache: 'no-store',
       });
-      let jsondata = await fetchdata.json();
+      let jsondata: PromMetricsData = await response.json();
       const { value } = jsondata;
       //only update if we get something back from prometheus
       if (value) {
-        value.forEach((el) => {
-          time.push(el[0]);
-          counter.push(el[1]);
+        value.forEach((el: [number, string]) => {
+          time.push(new Date(el[0] * 1000));
+          counter.push(Number(el[1]));
         });
         setTime(time);
         setCounter(counter);
