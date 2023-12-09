@@ -4,7 +4,7 @@ import { PodItem, NodeMemValue } from './types/server-types'
 declare global {
   namespace Express {
     export interface Locals {
-      pods: {pods: PodItem[], nameSpace: string[]},
+      pods: {pods: PodItem[], nameSpace: string[], statusCount: PodStatusCount};
       topPods: PodStatus[],
       topNodes: NodeStatus[],
       podMetrics: PodMetricsList,

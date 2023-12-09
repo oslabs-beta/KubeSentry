@@ -9,7 +9,7 @@ import {
   Metrics,
   topNodes,
   topPods,
-  SingleNodeMetrics,
+  NodeMetric,
   V1Pod,
   NodeStatus,
 } from '@kubernetes/client-node';
@@ -43,22 +43,24 @@ export const getNodeMetrics: RequestHandler = async (_, res, next) => {
 export const getNodeMem: RequestHandler = async (_, res, next) => {
   //get the memory used for each node: [['name', 'mem(in Kb)'],...]
   // console.log(res.locals.nodeMetrics.items);
-  const memUsed = res.locals.nodeMetrics.items.map((el: SingleNodeMetrics) => [
-    //name of node
-    el.metadata.name,
-    //memory usage of node comes in as '########ki'
-    Number(el.usage.memory.slice(0, el.usage.memory.length - 2)),
-  ]);
+  const memUsed: [string, number][] = res.locals.nodeMetrics.items.map(
+      (el: NodeMetric) => [
+        //name of node
+        el.metadata.name,
+        //memory usage of node comes in as '########ki'
+        Number(el.usage.memory.slice(0, el.usage.memory.length - 2)),
+      ]
+    );
   console.log(memUsed);
   //get the memory capacity of each node (in Mb)
   const memCap = res.locals.topNodes.map((el: NodeStatus) =>
     Number(el.Memory.Capacity)
   );
   //initialize the result object
-  res.locals.result = {};
+  res.locals.nodeMem = {};
   //populate the result object
   for (let i = 0; i < memUsed.length; i++) {
-    res.locals.result[memUsed[i][0]] = {
+    res.locals.nodeMem[memUsed[i][0]] = {
       'memUsed(kb)': memUsed[i][1],
       capacity: memCap[i],
       percentage: ((memUsed[i][1] / memCap[i]) * 100000).toFixed(2),
@@ -73,28 +75,30 @@ export const getPods: RequestHandler = async (_, res, next) => {
     //get all the pods from our cluster
     const podsRes = await k8sApi.listPodForAllNamespaces();
     //ARRAY OF ['namespace', 'pod-name', 'status]
-    res.locals.pods = { pods: [], nameSpace: new Set() };
+    const resPods: PodItem[] = [];
+    const statusCount: PodStatusCount = {};
+    const nameSpaces = new Set<string>();
     //pod objects
     podsRes.body.items.forEach((el: V1Pod) => {
       if (el.metadata && el.status) {
         // Todo: find a better way to handle undefined values
-
-        const status: string = el.status.phase?.toString() || 'undefined';
+        const status: string = el.status.phase!;
         // Keep track of pod counts by status bucket
-        res.locals.pods[status] = ++res.locals.pods[status] || 1;
-        res.locals.pods.pods.push({
-          namespace: el.metadata.namespace,
-          name: el.metadata.name,
+        statusCount[status] = ++statusCount[status] || 1;
+        resPods.push({
+          namespace: el.metadata.namespace!,
+          name: el.metadata.name!,
           status,
         });
-        res.locals.pods.nameSpace.add(el.metadata.namespace);
+        nameSpaces.add(el.metadata.namespace || 'default');
       } else {
         // Not handled
         return;
       }
     });
+
     //array of namespaces
-    res.locals.pods.nameSpace = [...res.locals.pods.nameSpace];
+    res.locals.pods = {pods: resPods, nameSpace: [...nameSpaces], statusCount};
     return next();
   } catch (err) {
     return next({

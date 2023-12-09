@@ -5,7 +5,8 @@ export async function GET(request: Request): Promise<KubePodsStatus> {
     cache: 'no-store',
   });
   let data: KubePodsStatus = await res.json();
-  return NextResponse.json({ Running: data.Running, Pending: data.Pending });
+  // console.log("Raw data: ", data)
+  return NextResponse.json(data.statusCount);
 }
 
 export async function HEAD(request: Request) {}
