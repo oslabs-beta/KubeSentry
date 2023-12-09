@@ -5,7 +5,7 @@ import { RequestHandler } from 'express';
 //time series query : http://localhost:31302/api/v1/query_range?query=&start=&end=&step
 //job query: query?query={job=''}
 //{metrics: '' , values[[time,counter],[]....]}
-export const getSomething: RequestHandler = async (_, res, next) => {
+export const getCustomCounter: RequestHandler = async (_, res, next) => {
   try {
     //interval of data
     let step = '10s';

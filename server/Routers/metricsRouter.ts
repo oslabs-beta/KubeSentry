@@ -8,14 +8,16 @@ import {
   getPods,
   deletePod,
 } from '../Controllers/kubeMetrics';
-import { getSomething } from '../Controllers/promMetrics';
+import { getCustomCounter } from '../Controllers/promMetrics';
 /**********************ROUTE ACTIONS**************** */
 //time series query : http://localhost:31302/api/v1/query_range?query=&start=&end=&step
 //job query: query?query={job=''}
 
-//MIGHT HAVE TO REFRESH A FEW TIMES TO GET DATA. IT WORKS I SWEAR!!!
-//prometheus data for our webapp(for now)
-router.get('/prom', getSomething, (_, res: Response) => {
+// MIGHT HAVE TO REFRESH A FEW TIMES TO GET DATA. IT WORKS I SWEAR!!!
+// prometheus data for our webapp(for now)
+router.get('/prom',
+  getCustomCounter,
+  (_, res: Response) => {
   res.status(200).json(res.locals.data);
 });
 
