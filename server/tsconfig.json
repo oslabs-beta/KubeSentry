@@ -35,7 +35,8 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    "./types/server-types.d.ts"
+    "server.d.ts",
+    "./types/server-types.ts"
   ],
   "exclude": [
     "node_modules"

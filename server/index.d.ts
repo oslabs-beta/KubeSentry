@@ -1,9 +1,9 @@
 import { NodeStatus, PodStatus, PodMetricsList, NodeMetricsList } from '@kubernetes/client-node';
-import { PodItem, NodeMemValue } from './server-types'
+import { PodItem, NodeMemValue } from './types/server-types'
 
 declare global {
   namespace Express {
-    interface Locals {
+    export interface Locals {
       pods: {pods: PodItem[], nameSpace: string[]},
       topPods: PodStatus[],
       topNodes: NodeStatus[],
@@ -14,3 +14,10 @@ declare global {
     }
   }
 }
+
+
+declare module s {
+  type SecretServerType = {length: number};
+}
+
+export = s;
