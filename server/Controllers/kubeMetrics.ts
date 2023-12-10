@@ -163,14 +163,23 @@ export const deletePod: RequestHandler = async (req, res, next) => {
 
 //readNamespacedEvent
 //listNamespacedEvent
-export const podLogs: RequestHandler = async (req, res, next) => {
+export const podEvents: RequestHandler = async (req, res, next) => {
   const { name, namespace } = req.params;
-  res.locals.podLogs = await k8sApi.listNamespacedEvent(
+  res.locals.podEvents = await k8sApi.listNamespacedEvent(
     namespace,
     undefined,
     undefined
   );
-  console.log(res.locals.podLogs.body.items);
-  res.locals.podLogs = res.locals.podLogs.body.items;
+
+  //filter the V1PodEvent response by the involved object name
+  res.locals.podEvents = res.locals.podEvents.body.items.filter(
+    (el: any) => el.involvedObject.name == name
+  );
+  return next();
+};
+
+export const kubeLogs: RequestHandler = async (req, res, next) => {
+  const { name, namespace } = req.params;
+  res.locals.podLogs = await k8sApi.readNamespacedPodLog(name, namespace);
   return next();
 };

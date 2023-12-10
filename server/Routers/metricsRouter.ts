@@ -7,7 +7,8 @@ import {
   getNodeMem,
   getPods,
   deletePod,
-  podLogs,
+  podEvents,
+  kubeLogs,
 } from '../Controllers/kubeMetrics';
 import { getCustomCounter } from '../Controllers/promMetrics';
 /**********************ROUTE ACTIONS**************** */
@@ -16,9 +17,7 @@ import { getCustomCounter } from '../Controllers/promMetrics';
 
 // MIGHT HAVE TO REFRESH A FEW TIMES TO GET DATA. IT WORKS I SWEAR!!!
 // prometheus data for our webapp(for now)
-router.get('/prom',
-  getCustomCounter,
-  (_, res: Response) => {
+router.get('/prom', getCustomCounter, (_, res: Response) => {
   res.status(200).json(res.locals.counterData);
 });
 
@@ -37,8 +36,10 @@ router.get('/delete/:namespace/:name', deletePod, (req, res) => {
   res.status(200).json(res.locals.deletedpod);
 });
 
-router.get('/getlogs/:namespace/:name', podLogs, (req, res) => {
-  res.status(200).json(res.locals.podLogs);
+router.get('/getEvents/:namespace/:name', podEvents, kubeLogs, (req, res) => {
+  res
+    .status(200)
+    .json({ events: res.locals.podEvents, logs: res.locals.podLogs.body });
 });
 /**********************EXPORT ROUTER**************** */
 export default router;
