@@ -7,8 +7,6 @@ const PROM_HOST = `http://localhost:${process.env.PROMETHEUS_PORT}/api/v1`;
 console.log("PROM_HOST: ", PROM_HOST)
 
 
-//Prometheus time series query : http://url:PORT/api/v1/query_range?query=&start=&end=&step
-//           job query:                                 query?query={job=''}
 
 // Build date string for Prometheus
 export function buildDateString(range=60, step=60): string {
@@ -24,8 +22,11 @@ export function buildDateString(range=60, step=60): string {
 }
 
 
-// {metrics: '' , values[[time,counter],[]....]}
-// fetch from Prometheus
+// Send a Prometheus API query using the following URL format:
+// http://url:PORT/api/v1/query_range?query={query}&start={}&end={}&step
+// @params {query}: Prometheus query (string)
+// @params {dateString}: start, end, step query parameters (string)
+// @returns PrometheusResponse
 export async function runPromQuery(query: string, dateString: string) {
   const promQuery = `${PROM_HOST}/query_range?query=${query}&${dateString}`;
   // console.log(`Query: ${promQuery}`)
