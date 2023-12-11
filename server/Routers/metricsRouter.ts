@@ -6,6 +6,7 @@ import {
   getNodeMetrics,
   getNodeMem,
   getPods,
+  // getGraph,
   deletePod,
 } from '../Controllers/kubeMetrics';
 import { getCustomCounter, getPrometheusMetrics } from '../Controllers/promMetrics';
@@ -24,6 +25,8 @@ router.get('/prom',
 router.get('/kubeNodes', getNodeMetrics, getNodeMem, (_, res) => {
   res.status(200).json(res.locals.result);
 });
+
+router.get('kubeGraph', (_, res) => { res.sendStatus(401) })
 
 //kubernetes pod information
 router.get('/kubePods', getPods, (_, res) => {

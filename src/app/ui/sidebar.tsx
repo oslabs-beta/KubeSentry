@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-const sideBar = () => {
+export default function SideBar() {
   const appName = 'Kube Sentry';
 
   return (
@@ -154,6 +154,24 @@ const sideBar = () => {
             <p>Report</p>
           </Link>
         </div>
+
+        <div>
+          <Link
+            href='/dashboard/graph'
+            className='flex h-12 grow items-center justify-center gap-2 rounded-md bg-secondaryDark p-3 text-sm font-medium hover:bg-thirdDark hover:text-white md:flex-none md:justify-start md:p-2 md:px-3'
+          >
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              x='0px'
+              y='0px'
+              width='22'
+              height='22'
+              viewBox='0 0 50 50'
+            >
+            </svg>
+            <p>Graph View</p>
+          </Link>
+        </div>
         <div>
           <Link
             href='/dashboard/alert'
@@ -198,13 +216,3 @@ const sideBar = () => {
     </div>
   );
 };
-
-export default sideBar;
-
-// return (
-//   <div>
-//     <Link href='/dashboard'>Dashboard</Link>
-//     <Link href='/dashboard'>Graphs</Link>
-//     <Link href='/dasbhoard'>Settings</Link>
-//   </div>
-// );
