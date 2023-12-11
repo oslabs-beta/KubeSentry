@@ -7,18 +7,15 @@ export const getCustomCounter: RequestHandler = async (_, res, next) => {
   try {
 
     const counter_result = await(runPromQuery('my_custom_counter', defaultRange))
-    console.log('counter_result: ', counter_result)
 
     console.dir(counter_result.data.result);
-
-    // console.log('Fetch result: ', result)
-    // TODO: check that we got something usable
+    // console.log('Prometheus query result: ', result)
+    // TODO: check whether we got something usable and fail gracefully
     res.locals.counterData = {
-      metrics: counter_result.data.result[0].metric.__name__,
-      value: counter_result.data.result[0].values,
+      metric: counter_result.data.result[0].metric.__name__,
+      values: counter_result.data.result[0].values,
     };
     //go to next middleware
-    console.log('Finished getting data')
     return next();
   } catch (err) {
     //route to global error
@@ -31,18 +28,20 @@ export const getCustomCounter: RequestHandler = async (_, res, next) => {
 };
 
 
-export const getDNSMetrics: RequestHandler = async (_, res, next) => {
+export const getPrometheusMetrics: RequestHandler = async (req, res, next) => {
 
   try {
-
-    const dnsQuery = 'sum(rate(coredns_dns_requests_total[2m]))';
-    const dns_result = await runPromQuery(dnsQuery, defaultRange);
-    console.log('dns_data: ', dns_result)
+    // const dnsQuery = 'sum(rate(coredns_dns_requests_total[2m]))';
+    if (typeof req.query.query != 'string') {
+      throw new Error("Unknown value for 'query'")
+    }
+    const result = await runPromQuery(req.query.query, defaultRange);
     res.locals.counterData = {
-      metrics: dns_result.data.result[0].metric.__name__,
-      value: dns_result.data.result[0].values,
+      metric: result.data.result[0].metric.__name__,
+      values: result.data.result[0].values,
     };
     //go to next middleware
+    // console.log("counterData: ", res.locals.counterData);
     return next();
   } catch (err) {
     //route to global error

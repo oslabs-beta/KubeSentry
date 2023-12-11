@@ -31,10 +31,10 @@ export default function Page() {
       />
       <div className='flex flex-column'>
         <div style={style}>
-          <TimeSeriesPlot />
+          <TimeSeriesPlot query={'sum(rate(coredns_dns_requests_total[2m]))'} title={'CoreDNS Requests'} />
         </div>
         <div style={style}>
-          <LinePlot />
+          <TimeSeriesPlot query={'sum(rate(coredns_dns_responses_total[2m]))'} title={'CoreDNS Responses'} />
         </div>
       </div>
       <div className='flex flow-row justify-center'>

@@ -66,7 +66,6 @@ export default function PieChart() {
     labels: Object.keys(piedata),
     datasets: [
       {
-        label: '# of Votes',
         data: Object.keys(piedata).map((c) => piedata[c]),
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',

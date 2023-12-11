@@ -4,8 +4,6 @@ import { PromMetricsData } from '../../../types/types';
 import 'chartjs-adapter-date-fns';
 import { useState, useEffect, useRef } from 'react';
 
-import { PromMetricsData } from '../../../types/types'
-
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -30,17 +28,16 @@ ChartJS.register(
 );
 
 import { Line } from 'react-chartjs-2';
-import mock_data from '../../../build/mock_data.json';
 
 type timedata = {
-  time: Date[];
-  counter: number[];
+  time: Date[],
+  counter: number[],
+  title: string,
 };
 
  //type error on options param
 function TimeSeriesPlotDisplay(data: timedata) {
   const graphTextColor = 'rgba(255,255,255,0.75)';
-  const yAxisTitle = 'Counter';
   const chartRef = useRef(null);
 
   const options = {
@@ -53,6 +50,11 @@ function TimeSeriesPlotDisplay(data: timedata) {
       },
     },
     responsive: true,
+    elements: {
+      point: {
+        pointStyle: false
+      }
+    },
     scales: {
       y: {
         ticks: {
@@ -65,7 +67,7 @@ function TimeSeriesPlotDisplay(data: timedata) {
         display: true,
         title: {
           display: true,
-          text: yAxisTitle,
+          // text: data.title,
           color: graphTextColor,
         },
       },
@@ -99,7 +101,7 @@ function TimeSeriesPlotDisplay(data: timedata) {
     labels: data.time,
     datasets: [
       {
-        label: 'Time Series Dataset',
+        label: data.title,
         data: data.counter,
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
@@ -110,26 +112,25 @@ function TimeSeriesPlotDisplay(data: timedata) {
   return <Line data={dataSet} ref={chartRef} options={options} />;
 }
 
-export default function TimeSeriesPlot() {
+type TimeSeriesParams = {query: string, title: string};
+export default function TimeSeriesPlot(params: TimeSeriesParams) {
   const [time, setTime] = useState<Date[]>([]);
   const [counter, setCounter] = useState<number[]>([]);
-  //const didMountRef = useRef(false);
 
   useEffect(() => {
-    const id = setInterval(async () => {
-      const response = await fetch('/charts/api', {
+    const id = setInterval(async() => {
+      const response = await fetch(`/charts/api?query=${params.query}`, {
         cache: 'no-store',
       });
-      console.log('Getting Response...')
       let jsondata: PromMetricsData = await response.json();
-      console.log('Got response')
-      const { value } = jsondata;
+      const { values } = jsondata;
       //only update if we get something back from prometheus
-      if (value) {
-        value.forEach((el: [number, string]) => {
+      if (values) {
+        values.forEach((el: [number, string]) => {
           time.push(new Date(el[0] * 1000));
           counter.push(Number(el[1]));
         });
+        console.log('Got values: ', values)
         setTime(time);
         setCounter(counter);
       }
@@ -138,12 +139,5 @@ export default function TimeSeriesPlot() {
     return () => clearInterval(id);
   }, [counter, time]);
 
-  // console.log(time, counter);
-  // const sorted = [];
-  // for (let i = 0; i < time.length; i++) {
-  //   sorted.push([time[i], counter[i]]);
-  // }
-  // sorted.sort((a, b) => a[0] < b[0]);
-
-  return <>{TimeSeriesPlotDisplay({ time: time, counter: counter })}</>;
+  return <>{TimeSeriesPlotDisplay({ time: time, counter: counter, title: params.title })}</>;
 }

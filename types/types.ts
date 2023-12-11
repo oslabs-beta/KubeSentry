@@ -13,6 +13,8 @@ export interface PodItem {
   startTime: any;
 }
 
-export type PromMetricsData = any;
+export type PrometheusDataItem = [number, string];
+export type PromMetricsData = {metric: string, values: PrometheusDataItem[]};
+
 export type KubeMetricsstatus = any;
 export type KubePodsStatus = any;
