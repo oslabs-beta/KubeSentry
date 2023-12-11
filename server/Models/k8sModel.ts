@@ -13,7 +13,3 @@ export const k8sApi = kc.makeApiClient(CoreV1Api);
 //mertics-server
 export const metricsClient = new Metrics(kc);
 
-
-export async function getTopNodes() {
- return ;
-}
