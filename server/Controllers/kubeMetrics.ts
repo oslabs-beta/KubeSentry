@@ -12,16 +12,28 @@ import {
   topPods,
 } from '@kubernetes/client-node';
 
+export const getTopNodes: RequestHandler = async (_, res, next) => {
+  try {
+    res.locals.topNodes = await topNodes(k8sApi);
+    return next();
+  } catch (err) {
+    return next({
+      log: `error in getTopNodes: ${err}`,
+      status: 500,
+      message: { err: 'could not get node metrics' },
+    });
+  }
+}
+
 //get the node metrics
 export const getNodeMetrics: RequestHandler = async (_, res, next) => {
   try {
     // console.log(kc);
-    res.locals.topNodes = await topNodes(k8sApi);
     res.locals.nodeMetrics = await metricsClient.getNodeMetrics();
     return next();
   } catch (err) {
     return next({
-      log: 'error in getNodeMetrics',
+      log: `error in getNodeMetrics: ${err}`,
       status: 500,
       message: { err: 'could not get node metrics' },
     });
@@ -30,6 +42,9 @@ export const getNodeMetrics: RequestHandler = async (_, res, next) => {
 
 
 export const getKubeGraph: RequestHandler = async (_, res, next) => {
+
+  // Namespaces?
+  res.locals.nodes = k8sApi.listNode()
 
 }
 

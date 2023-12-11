@@ -3,6 +3,7 @@ const router = Router();
 
 /**********************IMPORT CONTROLLERS**************** */
 import {
+  getTopNodes,
   getNodeMetrics,
   getNodeMem,
   getPods,
@@ -22,7 +23,11 @@ router.get('/prom',
 });
 
 //Kubernetes node information
-router.get('/kubeNodes', getNodeMetrics, getNodeMem, (_, res) => {
+router.get('/kubeNodes',
+  getTopNodes,
+  getNodeMetrics,
+  getNodeMem,
+  (_, res) => {
   res.status(200).json(res.locals.result);
 });
 
