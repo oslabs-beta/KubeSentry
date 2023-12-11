@@ -1,5 +1,10 @@
 //creates a Kubernetes cluster object
-import { KubeConfig, CoreV1Api, Metrics, topNodes, topPods, NodeMetric, V1Pod, NodeStatus, V1PodStatus } from '@kubernetes/client-node';
+import {
+  KubeConfig,
+  CoreV1Api,
+  Metrics,
+} from '@kubernetes/client-node';
+
 const kc = new KubeConfig();
 //loads the authentication data to our kubernetes object of our current cluster so it can talk to kube-apiserver
 kc.loadFromDefault();
@@ -9,6 +14,6 @@ export const k8sApi = kc.makeApiClient(CoreV1Api);
 export const metricsClient = new Metrics(kc);
 
 
-export async function k8top() {
- return await topNodes(k8sApi);
+export async function getTopNodes() {
+ return ;
 }
