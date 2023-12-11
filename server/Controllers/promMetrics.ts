@@ -8,9 +8,6 @@ export const getCustomCounter: RequestHandler = async (_, res, next) => {
 
     const counter_result = await(runPromQuery('my_custom_counter', defaultRange))
 
-    console.dir(counter_result.data.result);
-    // console.log('Prometheus query result: ', result)
-    // TODO: check whether we got something usable and fail gracefully
     res.locals.counterData = {
       metric: counter_result.data.result[0].metric.__name__,
       values: counter_result.data.result[0].values,
@@ -27,11 +24,11 @@ export const getCustomCounter: RequestHandler = async (_, res, next) => {
   }
 };
 
-
+// Executes the Prometheus query contained in req.query.query.
+// Stores the result to res.locals.counterData.
 export const getPrometheusMetrics: RequestHandler = async (req, res, next) => {
 
   try {
-    // const dnsQuery = 'sum(rate(coredns_dns_requests_total[2m]))';
     if (typeof req.query.query != 'string') {
       throw new Error("Unknown value for 'query'")
     }
@@ -40,8 +37,9 @@ export const getPrometheusMetrics: RequestHandler = async (req, res, next) => {
       metric: result.data.result[0].metric.__name__,
       values: result.data.result[0].values,
     };
-    //go to next middleware
-    // console.log("counterData: ", res.locals.counterData);
+    // TODO: check whether we got something usable and fail gracefully
+
+    // go to next middleware
     return next();
   } catch (err) {
     //route to global error
