@@ -41,7 +41,7 @@ export const getNodeMetrics: RequestHandler = async (_, res, next) => {
 
 //{name:{memused: , capacity: , percentage: } , name2:{...},...}
 export const getNodeMem: RequestHandler = async (_, res, next) => {
-  //get the memory used for each node: [['name', 'mem(in Kb)'],...]
+  // get the memory used for each node: [['name', 'mem(in Kb)'],...]
   // console.log(res.locals.nodeMetrics.items);
   const memUsed: [string, number][] = res.locals.nodeMetrics.items.map(
       (el: NodeMetric) => [
@@ -51,7 +51,7 @@ export const getNodeMem: RequestHandler = async (_, res, next) => {
         Number(el.usage.memory.slice(0, el.usage.memory.length - 2)),
       ]
     );
-  console.log(memUsed);
+  // console.log(memUsed);
   //get the memory capacity of each node (in Mb)
   const memCap = res.locals.topNodes.map((el: NodeStatus) =>
     Number(el.Memory.Capacity)

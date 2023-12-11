@@ -8,15 +8,14 @@ import {
   getPods,
   deletePod,
 } from '../Controllers/kubeMetrics';
-import { getCustomCounter } from '../Controllers/promMetrics';
+import { getCustomCounter, getPrometheusMetrics } from '../Controllers/promMetrics';
 /**********************ROUTE ACTIONS**************** */
 //time series query : http://localhost:31302/api/v1/query_range?query=&start=&end=&step
 //job query: query?query={job=''}
 
-// MIGHT HAVE TO REFRESH A FEW TIMES TO GET DATA. IT WORKS I SWEAR!!!
-// prometheus data for our webapp(for now)
+// Forward Prometheus data
 router.get('/prom',
-  getCustomCounter,
+  getPrometheusMetrics,
   (_, res: Response) => {
   res.status(200).json(res.locals.counterData);
 });

@@ -12,9 +12,22 @@ export interface PodItem {
 export interface PodStatusCount {[key: string] : number}
 export interface NodeMemValue {'memUsed(kb)': number, 'capacity': number, 'percentage': string}
 
-export interface PrometheusResponse<T> {
+// https://prometheus.io/docs/prometheus/latest/querying/api/
+import { PrometheusDataItem } from "@/types/types";
+
+type PrometheusRangeVector = {
+  metric: Record<string, string>,
+  values: PrometheusDataItem[],
+}
+
+interface PrometheusData {
+  resultType: ("matrix" | "vector" | "scalar" | "string"),
+  result: PrometheusRangeVector[];
+}
+
+export interface PrometheusResponse {
   status: "success" | "error",
-  data: T,
+  data: PrometheusData,
 
   // Only set if status is "error". The data field may still hold
   // additional data.

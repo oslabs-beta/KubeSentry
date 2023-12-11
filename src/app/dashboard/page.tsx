@@ -32,10 +32,10 @@ export default function Page() {
       <h1 className="text-3xl font-bold mt-4">Sentry Dashboard</h1>
       <div className="flex flex-column">
         <div style={style}>
-          <TimeSeriesPlot />
+          <TimeSeriesPlot query={'sum(rate(coredns_dns_requests_total[2m]))'} title={'CoreDNS Requests'} />
         </div>
         <div style={style}>
-          <LinePlot />
+          <TimeSeriesPlot query={'sum(rate(coredns_dns_responses_total[2m]))'} title={'CoreDNS Responses'} />
         </div>
       </div>
       <div className="flex flow-row justify-center">
