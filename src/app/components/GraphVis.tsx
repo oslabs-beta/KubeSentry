@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect } from 'react';
 import Graph from "react-graph-vis";
 import { Node, Edge } from "vis";
 
@@ -7,8 +10,34 @@ import { Node, Edge } from "vis";
 
 
 // Cluster:
+const options = {
+  // layout: {
+  //   hierarchical: false
+  // },
+  edges: {
+    color: "rgb(128,128,128)"
+  },
+  height: "500px"
+};
 
 export default function GraphVis() {
+
+
+  const buildGraph = async () => {
+    try {
+      const response = await fetch('/api/graph', { cache: 'no-store' });
+      const data = await response.json();
+      console.log('Server response: ', data)
+    }
+    catch (err) {
+      console.log(`Failed to construct graph: ${err}`);
+    }
+  };
+
+  useEffect( () => {
+    buildGraph()
+  }, [])
+
   const graph = {
     nodes: [
       { id: 1, label: "Node 1", title: "node 1 tootip text" },
@@ -25,15 +54,6 @@ export default function GraphVis() {
     ]
   };
 
-  const options = {
-    layout: {
-      hierarchical: true
-    },
-    edges: {
-      color: "rgb(128,128,128)"
-    },
-    height: "500px"
-  };
 
   const events = {
     select: function(event: {nodes: Node[], edges: Edge[]}) {
@@ -42,13 +62,16 @@ export default function GraphVis() {
       console.log('edges: ', edges)
     }
   };
+
+  // TODO: Maintain aspect ratio
   return (
     <Graph
       graph={graph}
       options={options}
       events={events}
+      identifier={'ClusterGraph'}
       getNetwork={network => {
-        //  if you want access to vis.js network api you can set the state in a parent component using this property
+        // If you want access to vis.js network api you can set the state in a parent component using this property
       }}
     />
   );

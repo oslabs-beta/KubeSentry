@@ -3,7 +3,8 @@ import {
   KubeConfig,
   CoreV1Api,
   Metrics,
-  AppsV1Api
+  AppsV1Api,
+  topNodes
 } from '@kubernetes/client-node';
 
 const kc = new KubeConfig();
@@ -15,3 +16,8 @@ export const k8sApi = kc.makeApiClient(CoreV1Api);
 export const k8sAppsApi = kc.makeApiClient(AppsV1Api)
 //mertics-server
 export const metricsClient = new Metrics(kc);
+
+export const queryTopNodes = async () => {
+  console.log('Querying topNodes: ');
+  console.log(await topNodes(k8sApi));
+}

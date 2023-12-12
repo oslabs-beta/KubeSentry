@@ -22,9 +22,11 @@ declare global {
       topNodes: NodeStatus[];
       podMetrics: PodMetricsList;
       nodeMetrics: NodeMetricsList;
-      counterData: { metrics: any; value: any };
-      nodeMem: { [key: string]: NodeMemValue };
+      nodeMem: Record<string, NodeMemValue>,
       prometheusData: PrometheusBackendResponse;
+      counterData: { metrics: any; value: any };
+      services: V1ServiceList,
+      deployments: V1DeplymentList
     }
   }
 }

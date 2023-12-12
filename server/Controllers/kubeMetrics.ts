@@ -2,26 +2,31 @@ require('dotenv').config();
 import { RequestHandler } from 'express';
 
 import { PodStatusCount } from '../types/server-types';
-import { k8sApi, k8sAppsApi, metricsClient } from '../Models/k8sModel';
+import { k8sApi, k8sAppsApi, metricsClient, queryTopNodes } from '../Models/k8sModel';
 import { PodItem } from '../../types/types';
 
 import {
   NodeMetric,
   V1Pod,
   NodeStatus,
-  topNodes,
   topPods,
+  topNodes
 } from '@kubernetes/client-node';
 
-export const getTopNodes: RequestHandler = async (_, res, next) => {
+
+export const getNodes: RequestHandler = async (_, res, next) => {
   try {
-    res.locals.topNodes = await topNodes(k8sApi);
+    console.log("Querying topNodes")
+    queryTopNodes();
+    const listNode = await k8sApi.listNode();
+    res.locals.nodeList = listNode.body.items;
     return next();
-  } catch (err) {
+  }
+  catch (err) {
     return next({
-      log: `error in getTopNodes: ${err}`,
+      log: `error in getNodes: ${err}`,
       status: 500,
-      message: { err: 'could not get node metrics' },
+      message: { err: 'ERROR: unable to get top nodes.' },
     });
   }
 };
@@ -29,20 +34,22 @@ export const getTopNodes: RequestHandler = async (_, res, next) => {
 //get the node metrics
 export const getNodeMetrics: RequestHandler = async (_, res, next) => {
   try {
-    // console.log(kc);
+    res.locals.topNodes = await topNodes(k8sApi);
     res.locals.nodeMetrics = await metricsClient.getNodeMetrics();
     return next();
   } catch (err) {
     return next({
-      log: `error in getNodeMetrics: ${err}`,
-      message: { err: 'ERROR: unable to get node metrics.' },
+      log: 'error in getNodeMetrics',
+      status: 500,
+      message: { err: 'could not get node metrics' },
     });
   }
 };
 
 export const getServices: RequestHandler = async (_, res, next) => {
   try {
-    res.locals.services = (await k8sApi.listServiceForAllNamespaces()).response;
+    const services = await k8sApi.listServiceForAllNamespaces();
+    res.locals.services = services.body.items;
     return next();
   } catch (err) {
     return next({
@@ -54,9 +61,8 @@ export const getServices: RequestHandler = async (_, res, next) => {
 
 export const getDeployments: RequestHandler = async (_, res, next) => {
   try {
-    res.locals.deployments = (
-      await k8sAppsApi.listDeploymentForAllNamespaces()
-    ).response;
+    const deployments = await k8sAppsApi.listDeploymentForAllNamespaces();
+    res.locals.deployments = deployments.body.items;
     return next();
   } catch (err) {
     return next({

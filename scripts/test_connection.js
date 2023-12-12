@@ -18,6 +18,7 @@ async function testk8s() {
   console.log('nodeMetrics: ', nodeMetrics)
   console.log("topNodes: ", await k8s.topNodes(k8sApi));
   // console.log("nodes: ", (await k8sApi.listNode()).body)
+  console.log("nodes: ", (await k8sApi.listPod()).body)
 }
 
 

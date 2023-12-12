@@ -3,7 +3,7 @@ const router = Router();
 
 /**********************IMPORT CONTROLLERS**************** */
 import {
-  getTopNodes,
+  getNodes,
   getNodeMetrics,
   getNodeMem,
   getPods,
@@ -11,7 +11,9 @@ import {
   getDeployments,
   deletePod,
 } from '../Controllers/kubeMetrics';
-import { getCustomCounter, getPrometheusMetrics } from '../Controllers/promMetrics';
+import { getPrometheusMetrics } from '../Controllers/promMetrics';
+import { KubeGraphData } from '../../types/types'
+
 /**********************ROUTE ACTIONS**************** */
 //time series query : http://localhost:31302/api/v1/query_range?query=&start=&end=&step
 //job query: query?query={job=''}
@@ -24,29 +26,39 @@ router.get('/prom',
 });
 
 //Kubernetes node information
-router.get('/kubeNodes',
-  getTopNodes,
+router.get(
+  '/kubeNodes',
   getNodeMetrics,
   getNodeMem,
   (_, res) => {
-  res.status(200).json(res.locals.result);
-});
+    res.status(200).json(res.locals.result);
+  }
+);
 
-router.get('/kubeGraph',
-  getTopNodes,
+router.get(
+  '/kubeGraph',
+  getNodes,
   getPods,
   getServices,
   getDeployments,
   (_, res) => {
-    res.sendStatus(401);
-})
+    const graph: KubeGraphData   = {
+      topNodes: res.locals.topNodes,
+      topPods: res.locals.topPods,
+      services: res.locals.services,
+      deployments: res.locals.deployments
+    }
+    // const graph = { hello: res.locals };
+    res.status(200).json(graph);
+  }
+);
 
 //kubernetes pod information
 router.get('/kubePods', getPods, (_, res) => {
   res.status(200).json(res.locals.pods);
 });
 
-//delete a pod from cluster
+// delete a pod from cluster
 router.get('/delete/:namespace/:name', deletePod, (req, res) => {
   res.status(200).json(res.locals.deletedpod);
 });
