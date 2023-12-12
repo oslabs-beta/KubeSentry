@@ -1,7 +1,8 @@
 require('dotenv').config();
 import { RequestHandler } from 'express';
+
 import { PodStatusCount } from '../types/server-types';
-import { k8sApi, metricsClient } from '../Models/k8sModel';
+import { k8sApi, k8sAppsApi, metricsClient } from '../Models/k8sModel';
 import { PodItem } from '../../types/types';
 
 import {
@@ -23,7 +24,7 @@ export const getTopNodes: RequestHandler = async (_, res, next) => {
       message: { err: 'could not get node metrics' },
     });
   }
-}
+};
 
 //get the node metrics
 export const getNodeMetrics: RequestHandler = async (_, res, next) => {
@@ -34,24 +35,45 @@ export const getNodeMetrics: RequestHandler = async (_, res, next) => {
   } catch (err) {
     return next({
       log: `error in getNodeMetrics: ${err}`,
-      status: 500,
-      message: { err: 'could not get node metrics' },
+      message: { err: 'ERROR: unable to get node metrics.' },
     });
   }
 };
 
+export const getServices: RequestHandler = async (_, res, next) => {
+  try {
+    res.locals.services = (await k8sApi.listServiceForAllNamespaces()).response;
+    return next();
+  } catch (err) {
+    return next({
+      log: `error in getServices: ${err}`,
+      message: { err: 'ERROR: unable to list services.' },
+    });
+  }
+};
+
+export const getDeployments: RequestHandler = async (_, res, next) => {
+  try {
+    res.locals.deployments = (
+      await k8sAppsApi.listDeploymentForAllNamespaces()
+    ).response;
+    return next();
+  } catch (err) {
+    return next({
+      log: `error in getTopNodes: ${err}`,
+      message: { err: 'ERROR: unable to list deployments.' },
+    });
+  }
+};
 
 export const getKubeGraph: RequestHandler = async (_, res, next) => {
-
   // Namespaces?
-  res.locals.nodes = k8sApi.listNode()
-
-}
+  res.locals.nodes = k8sApi.listNode();
+};
 
 //{name:{memused: , capacity: , percentage: } , name2:{...},...}
 export const getNodeMem: RequestHandler = async (_, res, next) => {
   // get the memory used for each node: [['name', 'mem(in Kb)'],...]
-  // console.log(res.locals.nodeMetrics.items);
   const memUsed: [string, number][] = res.locals.nodeMetrics.items.map(
     (el: NodeMetric) => [
       //name of node
@@ -81,7 +103,7 @@ export const getNodeMem: RequestHandler = async (_, res, next) => {
 export const getPods: RequestHandler = async (_, res, next) => {
   try {
     //get all the pods from our cluster
-    const podsRes = await k8sApi.listPodForAllNamespaces()
+    const podsRes = await k8sApi.listPodForAllNamespaces();
     //ARRAY OF ['namespace', 'pod-name', 'status]
     const resPods: PodItem[] = [];
     const statusCount: PodStatusCount = {};
