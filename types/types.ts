@@ -26,8 +26,8 @@ export interface PodItem {
 }
 
 export type KubeGraphData = {
-  topNodes: object;
-  topPods: KubePodsStatus;
+  nodeList: object;
+  pods: KubePodsStatus;
   services: V1ServiceList;
   deployments: V1DeploymentList;
 };

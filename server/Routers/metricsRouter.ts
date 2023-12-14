@@ -43,12 +43,11 @@ router.get(
   getDeployments,
   (_, res) => {
     const graph: KubeGraphData   = {
-      topNodes: res.locals.topNodes,
-      topPods: res.locals.topPods,
+      nodeList: res.locals.nodeList,
+      pods: res.locals.pods,
       services: res.locals.services,
       deployments: res.locals.deployments
     }
-    // const graph = { hello: res.locals };
     res.status(200).json(graph);
   }
 );
