@@ -1,7 +1,8 @@
 import {
   V1ServiceList,
-  V1PodList,
+  V1Pod,
   V1DeploymentList,
+  V1Node,
 } from '@kubernetes/client-node';
 
 export type PieChartData = { [key: string]: number };
@@ -26,8 +27,8 @@ export interface PodItem {
 }
 
 export type KubeGraphData = {
-  nodeList: object;
-  pods: KubePodsStatus;
+  nodeList: V1Node[];
+  pods: V1Pod[];
   services: V1ServiceList;
   deployments: V1DeploymentList;
 };

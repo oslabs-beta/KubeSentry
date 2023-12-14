@@ -77,6 +77,23 @@ export const getKubeGraph: RequestHandler = async (_, res, next) => {
   res.locals.nodes = k8sApi.listNode();
 };
 
+
+export const getRawPods: RequestHandler = async (_, res, next) => {
+  try {
+    console.log('Trying to fetch pods.')
+    const pods = await k8sApi.listPodForAllNamespaces();
+    console.log('Got pods : ', pods.body)
+    res.locals.rawPods = pods.body.items;
+    return next();
+  } catch (err) {
+    return next({
+      log: `error in getPodsRaw: ${err}`,
+      message: { err: 'ERROR: unable to list pods.' },
+    });
+  }
+}
+
+
 //{name:{memused: , capacity: , percentage: } , name2:{...},...}
 export const getNodeMem: RequestHandler = async (_, res, next) => {
   // get the memory used for each node: [['name', 'mem(in Kb)'],...]

@@ -7,6 +7,6 @@ export async function GET() {
     next: { revalidate: 30 }
   });
   let data: KubeGraphData = await res.json();
-  console.log("Raw data: ", data)
+  // console.log("Raw data: ", data)
   return NextResponse.json(data);
 }

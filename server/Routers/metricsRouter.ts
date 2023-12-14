@@ -7,6 +7,7 @@ import {
   getNodeMetrics,
   getNodeMem,
   getPods,
+  getRawPods,
   getServices,
   getDeployments,
   deletePod,
@@ -38,13 +39,13 @@ router.get(
 router.get(
   '/kubeGraph',
   getNodes,
-  getPods,
+  getRawPods,
   getServices,
   getDeployments,
   (_, res) => {
     const graph: KubeGraphData   = {
       nodeList: res.locals.nodeList,
-      pods: res.locals.pods,
+      pods: res.locals.rawPods,
       services: res.locals.services,
       deployments: res.locals.deployments
     }

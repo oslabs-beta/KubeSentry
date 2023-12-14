@@ -18,6 +18,7 @@ declare global {
         nameSpace: string[];
         statusCount: PodStatusCount;
       };
+      rawPods: V1Pod[],
       topPods: PodStatus[];
       topNodes: NodeStatus[];
       podMetrics: PodMetricsList;
