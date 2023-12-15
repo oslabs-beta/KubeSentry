@@ -22,26 +22,26 @@ export default function Page() {
     });
     return;
   };
-  //make pods cards from the data we get back
-  const makePodCards = () => {
-    //initialize empty array
-    let podsArray = [];
-    //for each pod, push a card passing in props for name, namespace, status and the handleclick function
-    for (let i = 0; i < pods.length; i++) {
-      podsArray.push(
-        <div>
-          <PodCard
-            podName={pods[i]['name']}
-            podStatus={pods[i]['status']}
-            nameSpace={pods[i]['namespace']}
-            handleClick={handleClick}
-          />
-        </div>
-      );
-    }
-    //return the populated array
-    return podsArray;
-  };
+  // //make pods cards from the data we get back
+  // const makePodCards = () => {
+  //   //initialize empty array
+  //   let podsArray = [];
+  //   //for each pod, push a card passing in props for name, namespace, status and the handleclick function
+  //   for (let i = 0; i < pods.length; i++) {
+  //     podsArray.push(
+  //       <div>
+  //         <PodCard
+  //           podName={pods[i]['name']}
+  //           podStatus={pods[i]['status']}
+  //           nameSpace={pods[i]['namespace']}
+  //           handleClick={handleClick}
+  //         />
+  //       </div>
+  //     );
+  //   }
+  //   //return the populated array
+  //   return podsArray;
+  // };
 
   /*******************************USE EFFECT**************************************** */
   //only once on load
@@ -58,11 +58,65 @@ export default function Page() {
     };
   }, []);
 
+  const categorizePodsByNamespace = (pods) => {
+    return pods.reduce((acc, pod) => {
+      const namespace = pod.namespace;
+      if (!acc[namespace]) {
+        acc[namespace] = [];
+      }
+      acc[namespace].push(pod);
+      return acc;
+    }, {});
+  };
+
+  const [openNamespace, setOpenNamespace] = useState(null);
+
+  const toggleNamespace = (namespace) => {
+    setOpenNamespace(openNamespace === namespace ? null : namespace);
+  };
+
+  const renderNamespacesWithPods = (categorizedPods) => {
+    return Object.keys(categorizedPods).map((namespace) => (
+      <div key={namespace}>
+        <button
+          onClick={() => toggleNamespace(namespace)}
+          className='flex items-center'
+        >
+          <span>{namespace}</span>
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            viewBox='0 0 20 20'
+            fill='currentColor'
+            className='w-5 h-5'
+          >
+            <path
+              fillRule='evenodd'
+              d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z'
+              clipRule='evenodd'
+            />
+          </svg>
+        </button>
+        {openNamespace === namespace && (
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+            {categorizedPods[namespace].map((pod) => (
+              <PodCard
+                key={pod.name}
+                podName={pod.name}
+                podStatus={pod.status}
+                nameSpace={pod.namespace}
+                handleClick={handleClick}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    ));
+  };
+  const categorizedPods = categorizePodsByNamespace(pods);
+
   return (
     <div>
-      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-        {makePodCards()}
-      </div>
+      <div>{renderNamespacesWithPods(categorizedPods)}</div>
     </div>
   );
 }

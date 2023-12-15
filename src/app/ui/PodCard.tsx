@@ -1,5 +1,6 @@
-import React from 'react';
-
+'use client';
+import React, { useState } from 'react';
+import Modal from '@/src/app/ui/PodModal';
 type cardProps = {
   podName: string;
   podStatus: string;
@@ -8,6 +9,13 @@ type cardProps = {
 };
 export default function PodCard(props: cardProps) {
   const { podName, podStatus, nameSpace, handleClick } = props;
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   return (
     <div className='relative flex flex-col justify-between h-64 rounded-3xl overflow-hidden shadow-lg border-solid bg-secondaryDark shadow-lg '>
       <button
@@ -37,10 +45,18 @@ export default function PodCard(props: cardProps) {
         </p>
       </div>
       <div className='flex justify-center w-full pb-4'>
-        <button className='bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded'>
+        <button
+          onClick={toggleModal}
+          className='bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded'
+        >
           More Info
         </button>
       </div>
+      <Modal isOpen={isModalOpen} onClose={toggleModal}>
+        <p>Details about {podName}</p>
+        {/* Content you want to display in the modal */}
+        <div>{nameSpace}</div>
+      </Modal>
     </div>
   );
 }
