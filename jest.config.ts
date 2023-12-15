@@ -175,9 +175,9 @@ const config: Config = {
   // testRunner: "jest-circus/runner",
 
   // A map from regular expressions to paths to transformers
-  // "transform": {
-  //   "\\.[jt]sx?$": "babel-jest"
-  // },
+  "transform": {
+    "\\.[jt]sx?$": ["babel-jest", { configFile: './babel.config.testing.js' }]
+  },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   // transformIgnorePatterns: [
