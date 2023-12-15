@@ -1,17 +1,6 @@
-
-'help me', 
-'help me', 
-'help me', 
-'help me', 
-'help me', 
-'help me', 
-'help me', 
-'help me', 
-'help me', 
-'help me', 
-'help me', 
-'help me', 
-'help me', 
-'help me', 
-"help me", 
-"help me", 
+,{"HELP":1}
+,{"HELP":1}
+,{"HELP":1}
+,{"HELP":1}
+,"helpMe"
+,{"HELP":1}

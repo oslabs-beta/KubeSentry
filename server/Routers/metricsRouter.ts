@@ -45,7 +45,7 @@ router.get('/getEvents/:namespace/:name', podEvents, kubeLogs, (req, res) => {
 });
 
 router.get('/alertlogs', getAlertLogs, (req, res) => {
-  res.status(200).json('yes')
+  res.status(200).json(res.locals.alerts)
 });
 /**********************EXPORT ROUTER**************** */
 export default router;

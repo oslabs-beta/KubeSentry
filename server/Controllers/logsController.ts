@@ -6,9 +6,10 @@ import path from 'path';
 export const getAlertLogs: RequestHandler = async (req, res, next) => {
   try {
     const alertPath = path.join(__dirname, '../AlertLogs.txt');
-    const something = fs.appendFileSync(alertPath, `\"help me\", \n`);
-    const data = (`[${fs.readFileSync(alertPath, 'utf-8')}]`);
-    console.log(data);
+    const something = fs.appendFileSync(alertPath, `,{"HELP":1}\n`);
+    let data = fs.readFileSync(alertPath, 'utf-8');
+    data = data.slice(1).replace(/\n/g, '');
+    res.locals.alerts = JSON.parse(`[${data.trim()}]`);
     return next();
   } catch (err) {
     return next({
