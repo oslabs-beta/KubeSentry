@@ -25,12 +25,13 @@
     ],
     "paths": {
       "@/*": ["./*"]
-    }
+    },
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "__test__/*.tsx",
     ".next/types/**/*.ts",
     "src/app/layout.tsx",
     "src/app/app.tsx",
@@ -46,6 +47,7 @@
     "src/app/ui/sidebar.tsx",
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "*.config.js"
   ]
 }

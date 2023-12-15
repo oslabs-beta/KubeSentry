@@ -1,15 +1,16 @@
 import React from 'react';
 
-type cardProps = {
+export type PodCardProps = {
   podName: string;
   podStatus: string;
   nameSpace: string;
   handleClick: Function;
 };
-export default function PodCard(props: cardProps) {
+
+export function PodCard(props: PodCardProps) {
   const { podName, podStatus, nameSpace, handleClick } = props;
   return (
-    <div className="max-w-sm rounded overflow-hidden shadow-lg border-solid bg-secondaryDark shadow-lg ">
+    <article className="max-w-sm rounded overflow-hidden shadow-lg border-solid bg-secondaryDark shadow-lg ">
       <div className="flex flex-col items-center px-4 py-4 h-64">
         <div className="font-bold text-base mb-2 text-center text-slate-100">
           {podName}
@@ -25,6 +26,6 @@ export default function PodCard(props: cardProps) {
           Delete
         </button>
       </div>
-    </div>
+    </article>
   );
 }
