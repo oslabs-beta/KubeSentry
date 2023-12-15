@@ -1,6 +1,2 @@
-,{"HELP":1}
-,{"HELP":1}
-,{"HELP":1}
-,{"HELP":1}
-,"helpMe"
-,{"HELP":1}
+,{"help":2}
+,{"help":2}

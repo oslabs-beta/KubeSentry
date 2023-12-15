@@ -11,7 +11,7 @@ import {
   kubeLogs,
 } from '../Controllers/kubeMetrics';
 import { getCustomCounter } from '../Controllers/promMetrics';
-import { getAlertLogs } from '../Controllers/logsController';
+import { getAlertLogs, addAlertLogs } from '../Controllers/logsController';
 /**********************ROUTE ACTIONS**************** */
 //time series query : http://localhost:31302/api/v1/query_range?query=&start=&end=&step
 //job query: query?query={job=''}
@@ -45,7 +45,11 @@ router.get('/getEvents/:namespace/:name', podEvents, kubeLogs, (req, res) => {
 });
 
 router.get('/alertlogs', getAlertLogs, (req, res) => {
-  res.status(200).json(res.locals.alerts)
+  res.status(200).json(res.locals.alerts);
+});
+
+router.post('/alertlogs', addAlertLogs, (req, res) => {
+  res.status(200).json(res.locals.alerts);
 });
 /**********************EXPORT ROUTER**************** */
 export default router;
