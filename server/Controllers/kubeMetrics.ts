@@ -1,7 +1,7 @@
 require('dotenv').config();
 import { RequestHandler } from 'express';
-import { PodItem, PodStatusCount } from '../types/server-types'
-
+import { PodStatusCount } from '../types/server-types';
+import { PodItem } from '../../types/types';
 
 import {
   KubeConfig,
@@ -44,13 +44,13 @@ export const getNodeMem: RequestHandler = async (_, res, next) => {
   //get the memory used for each node: [['name', 'mem(in Kb)'],...]
   // console.log(res.locals.nodeMetrics.items);
   const memUsed: [string, number][] = res.locals.nodeMetrics.items.map(
-      (el: NodeMetric) => [
-        //name of node
-        el.metadata.name,
-        //memory usage of node comes in as '########ki'
-        Number(el.usage.memory.slice(0, el.usage.memory.length - 2)),
-      ]
-    );
+    (el: NodeMetric) => [
+      //name of node
+      el.metadata.name,
+      //memory usage of node comes in as '########ki'
+      Number(el.usage.memory.slice(0, el.usage.memory.length - 2)),
+    ]
+  );
   console.log(memUsed);
   //get the memory capacity of each node (in Mb)
   const memCap = res.locals.topNodes.map((el: NodeStatus) =>
@@ -85,10 +85,20 @@ export const getPods: RequestHandler = async (_, res, next) => {
         const status: string = el.status.phase!;
         // Keep track of pod counts by status bucket
         statusCount[status] = ++statusCount[status] || 1;
+        //running containers
+        const containers = el.spec!.containers!;
+        const amtOfContainers = containers.length;
         resPods.push({
           namespace: el.metadata.namespace!,
           name: el.metadata.name!,
           status,
+          creationTimestamp: el.metadata.creationTimestamp!,
+          dnsPolicy: el.spec!.dnsPolicy!,
+          containers: amtOfContainers,
+          restartPolicy: el.spec!.restartPolicy!,
+          hostIP: el.status!.hostIP!,
+          podIP: el.status!.podIP!,
+          startTime: el.status!.startTime!,
         });
         nameSpaces.add(el.metadata.namespace || 'default');
       } else {
@@ -98,7 +108,11 @@ export const getPods: RequestHandler = async (_, res, next) => {
     });
 
     //array of namespaces
-    res.locals.pods = {pods: resPods, nameSpace: [...nameSpaces], statusCount};
+    res.locals.pods = {
+      pods: resPods,
+      nameSpace: [...nameSpaces],
+      statusCount,
+    };
     return next();
   } catch (err) {
     return next({

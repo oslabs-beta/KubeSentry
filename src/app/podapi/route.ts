@@ -10,7 +10,7 @@ export async function GET(request: Request) {
   } catch (err) {
     //return error message back to NEXT.JS endpoint
     return NextResponse.json({
-      log: 'could not get pods in next',
+      log: `could not get pods in next: ${err}`,
       status: 500,
       message: { err: err },
     });
