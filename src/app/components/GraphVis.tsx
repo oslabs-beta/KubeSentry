@@ -2,12 +2,11 @@
 
 import { useEffect, useState, useRef } from 'react';
 import CytoscapeComponent from 'react-cytoscapejs';
-import cxtmenu from 'cytoscape-cxtmenu';
 import Cytoscape from 'cytoscape';
 import { KubeGraphData } from '../../../types/types';
 import { v4 as uuidv4 } from 'uuid';
 
-Cytoscape.use( cxtmenu );
+Cytoscape.use(require('cytoscape-dom-node'));
 
 // Cluster:
 const style: Cytoscape.Stylesheet[] = [
@@ -16,6 +15,8 @@ const style: Cytoscape.Stylesheet[] = [
       style: {
         color: '#ddd',
         shape: 'round-rectangle',
+        width: 50,
+        height: 50,
         'background-color': '#444',
         'border-width': 2,
         'overlay-padding': 5
@@ -25,7 +26,7 @@ const style: Cytoscape.Stylesheet[] = [
       selector: '.kNode',
       style: {
         width: 70,
-        height: 100,
+        height: 80,
         'background-color': '#66d',
         label: undefined,
         'content': 'data(label)',
@@ -38,7 +39,6 @@ const style: Cytoscape.Stylesheet[] = [
         label: 'data(label)'
       }
     },
-
     {
       selector: 'edge',
       style: {
@@ -58,6 +58,18 @@ const graphStyle =  {
   'backgroundColor': '#222222',
   'borderRadius': '10px'
 }
+
+const palette = ["#22577a","#38a3a5","#c8b8db","#d1efb5","#bf4e30"];
+
+palette.forEach((color, i) => {
+  style.push({
+    selector: `.namespace${i}`,
+    style: {
+      'background-color': color
+    }
+  })
+
+})
 
 const layoutStyle =  {
   name: 'cose',
@@ -132,33 +144,65 @@ export default function GraphVis() {
       // Build list of graph elements.
       const elements:Cytoscape.ElementDefinition[] = []
 
+      const namespaces = new Map<string,number>();
+      function getNamespaceId(ns: string) {
+        if (!(ns in namespaces)) {
+          namespaces.set(ns, namespaces.size);
+        }
+        return namespaces.get(ns)!;
+      }
+
+      function cy_node_def(id: string, label: string, classes: string[]) {
+        // let id = `n${cy.nodes().length}`;
+        let div = document.createElement("div");
+        div.innerHTML = `node ${label}`;
+        div.className = 'my-cy-node';
+        div.style.width = `${Math.floor(Math.random() * 40) + 60}px`;
+        div.style.height = `${Math.floor(Math.random() * 30) + 50}px`;
+
+        return {
+          'data': {
+            'id': id,
+            'label': label,
+            'dom': div,
+          },
+          classes,
+          'renderedPosition': { x: 100, y: 100 }
+        };
+      }
+
+
 
       // Add each node.
-      data.nodeList.forEach((node, i) => {
+      data.nodeList.forEach(node => {
         let nodeName = node.metadata!.name!;
-        elements.push({ data: { id: nodeName , label: nodeName },
-           classes: ['kNode'],
-           position: { x: 100, y: 100 } })
+        let namespaceId = getNamespaceId(node.metadata!.namespace!);
+        const newNodeDef = cy_node_def(nodeName, nodeName, ['kNode', `namespace${namespaceId}`]);
+        console.log('NodeDef: ', newNodeDef);
+        elements.push(newNodeDef);
       })
 
 
-      data.pods.forEach((pod, i) => {
+      data.pods.forEach(pod => {
         const podName = pod.metadata!.name!;
         const containerName = pod.spec!.containers[0].name!;
         const nodeName = pod.spec!.nodeName!;
-        elements.push({
-          data: { id: podName , label: containerName},
-          position: { x: 100, y: 100 },
-          classes: ['pod']
-        })
-        elements.push( { data: { source: nodeName, target: podName, label: `node_affinity_${podName}` } })
+        let namespaceId = getNamespaceId(pod.metadata!.namespace!);
+        const label = `node_affinity_${podName}`;
+        const newNodeDef = cy_node_def(podName, containerName, ['pod', `namespace${namespaceId}`]);
+        console.log('NodeDef: ', newNodeDef);
+        elements.push(newNodeDef);
+        elements.push( { data: { source: nodeName, target: podName, } })
       })
 
 
-      // Add context menu
-      // let cyGraph = myCyRef!;
-      // let menu = cyGraph.cxtmenu( defaults );
+      let cyGraph = myCyRef.current!;
+
       if (!didSetData) {
+        // Add context menu
+        // let menu = cyGraph.cxtmenu( defaults );
+        // console.log('Enabling domNode()')
+        // cyGraph.domNode();
         setElements( elements )
         didSetData = true;
       }
@@ -187,7 +231,11 @@ export default function GraphVis() {
       stylesheet={ style }
       key={uuidv4()}
       layout={layoutStyle}
-      cy={(cy) => { myCyRef.current = cy }} // Grab ref to cytoscape.Core
+      cy={cy => {
+        // Add domNode drawing
+        cy.domNode();
+        myCyRef.current = cy
+      }} // Grab ref to cytoscape.Core
     />
   );
 }
