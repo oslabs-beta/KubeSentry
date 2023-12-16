@@ -1,27 +1,15 @@
 'use client';
 import React, { useState } from 'react';
 import Modal from './PodModal';
+import { PodItem } from '../../../types/types';
 
-export type PodCardProps = {
-  podName: string;
-  podStatus: string;
-  nameSpace: string;
-  handleClick: Function;
-  creationTimestamp: any;
-  dnsPolicy: string;
-  containers: number;
-  restartPolicy: string;
-  hostIP: string;
-  podIP: string;
-  startTime: any;
-};
-
-export function PodCard(props: PodCardProps) {
+//Each individual PodCard component which accepts Poditem and a handleClick function as props 
+export function PodCard(props: { pod: PodItem; handleClick: Function }) {
+  //destructuring props
   const {
-    podName,
-    podStatus,
-    nameSpace,
-    handleClick,
+    name,
+    status,
+    namespace,
     creationTimestamp,
     dnsPolicy,
     containers,
@@ -29,20 +17,27 @@ export function PodCard(props: PodCardProps) {
     hostIP,
     podIP,
     startTime,
-  } = props;
+  } = props.pod;
+  //destructuring handelick 
+  const handleClick = props.handleClick;
 
+  //state for tracking if the modal is open or not 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  //function to toggle the modal's open state. 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
 
   return (
+    
     <article className='relative flex flex-col justify-between h-64 rounded-3xl overflow-hidden shadow-lg border-solid bg-secondaryDark shadow-lg '>
+      {/* trash can icon for deleting the pod  */}
       <button
-        onClick={() => handleClick(podName, nameSpace)}
+        onClick={() => handleClick(name, namespace)}
         className='absolute top-2 left-2'
       >
+        {/* trash can icon  */}
         <svg
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 0 20 20'
@@ -56,15 +51,17 @@ export function PodCard(props: PodCardProps) {
           />
         </svg>
       </button>
+      {/* displays the text content for pod name, namespace and status  */}
       <div className='mx-8 mt-2'>
         <div className='font-bold text-base mb-2 text-center text-slate-100'>
-          {podName}
+          {name}
         </div>
-        <p className='text-gray-700 text-sm text-center'>{nameSpace}</p>
+        <p className='text-gray-700 text-sm text-center'>{namespace}</p>
         <p className='text-gray-700 text-sm text-center text-green-600'>
-          {podStatus}
+          {status}
         </p>
       </div>
+      {/* button to open the modal for more information  */}
       <div className='flex justify-center w-full pb-4'>
         <button
           onClick={toggleModal}
@@ -73,17 +70,18 @@ export function PodCard(props: PodCardProps) {
           More Info
         </button>
       </div>
-
+      
+      {/* Modal Component which is displayed based on the isModalOpen State.  */}
       <Modal isOpen={isModalOpen} onClose={toggleModal}>
-        <p>PodName: {podName}</p>
-        <div>NameSpace: {nameSpace}</div>
-        <div>Creation Time Stamp: {creationTimestamp}</div>
+        <p>PodName: {name}</p>
+        <div>NameSpace: {namespace}</div>
+        <div>Creation Time Stamp: {creationTimestamp.toString()}</div>
         <div>DNS Policy: {dnsPolicy}</div>
         <div>Number of Containers: {containers}</div>
         <div>Restart Policy: {restartPolicy} </div>
         <div>HostIP: {hostIP}</div>
         <div>PodIP: {podIP} </div>
-        <div>StartTime: {startTime} </div>
+        <div>StartTime: {startTime.toString()} </div>
       </Modal>
     </article>
   );

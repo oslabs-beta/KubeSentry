@@ -4,18 +4,7 @@ export type ServerError = {
   message: { err: string };
 };
 
-export interface PodItem {
-  status: string;
-  namespace: string;
-  name: string;
-  creationTimestamp: any;
-  dnsPolicy: string;
-  containers: number;
-  restartPolicy: string;
-  hostIP: string;
-  podIP: string;
-  startTime: any;
-}
+
 export interface PodStatusCount {
   [key: string]: number;
 }

@@ -1,6 +1,7 @@
 require('dotenv').config();
 import { RequestHandler } from 'express';
-import { PodItem, PodStatusCount } from '../types/server-types';
+import { PodStatusCount } from '../types/server-types';
+import { PodItem } from '../../types/types';
 
 import {
   KubeConfig,
@@ -86,18 +87,18 @@ export const getPods: RequestHandler = async (_, res, next) => {
         statusCount[status] = ++statusCount[status] || 1;
         //running containers
         const containers = el.spec!.containers!;
-        const amtOfContainers = containers.length; 
+        const amtOfContainers = containers.length;
         resPods.push({
           namespace: el.metadata.namespace!,
           name: el.metadata.name!,
           status,
           creationTimestamp: el.metadata.creationTimestamp!,
           dnsPolicy: el.spec!.dnsPolicy!,
-          containers: amtOfContainers, 
-          restartPolicy: el.spec!.restartPolicy!, 
-          hostIP: el.status!.hostIP!, 
+          containers: amtOfContainers,
+          restartPolicy: el.spec!.restartPolicy!,
+          hostIP: el.status!.hostIP!,
           podIP: el.status!.podIP!,
-          startTime: el.status!.startTime!, 
+          startTime: el.status!.startTime!,
         });
         nameSpaces.add(el.metadata.namespace || 'default');
       } else {
