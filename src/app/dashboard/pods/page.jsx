@@ -105,6 +105,13 @@ export default function Page() {
                 podStatus={pod.status}
                 nameSpace={pod.namespace}
                 handleClick={handleClick}
+                creationTimestamp={pod.creationTimestamp}
+                dnsPolicy = {pod.dnsPolicy}
+                containers = {pod.containers}
+                restartPolicy = {pod.restartPolicy}
+                hostIP = {pod.hostIP}
+                podIP = {pod.podIP}
+                startTime = {pod.startTime}
               />
             ))}
           </div>

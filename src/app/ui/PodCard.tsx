@@ -6,9 +6,28 @@ type cardProps = {
   podStatus: string;
   nameSpace: string;
   handleClick: Function;
+  creationTimestamp: any;
+  dnsPolicy: string;
+  containers: number;
+  restartPolicy: string;
+  hostIP: string;
+  podIP: string;
+  startTime: any;
 };
 export default function PodCard(props: cardProps) {
-  const { podName, podStatus, nameSpace, handleClick } = props;
+  const {
+    podName,
+    podStatus,
+    nameSpace,
+    handleClick,
+    creationTimestamp,
+    dnsPolicy,
+    containers,
+    restartPolicy,
+    hostIP,
+    podIP,
+    startTime,
+  } = props;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -53,9 +72,16 @@ export default function PodCard(props: cardProps) {
         </button>
       </div>
       <Modal isOpen={isModalOpen} onClose={toggleModal}>
-        <p>Details about {podName}</p>
-        {/* Content you want to display in the modal */}
-        <div>{nameSpace}</div>
+        <p>PodName: {podName}</p>
+        <div>NameSpace: {nameSpace}</div>
+        <div>Creation Time Stamp: {creationTimestamp}</div>
+        <div>DNS Policy: {dnsPolicy}</div>
+        <div>Number of Containers: {containers}</div>
+        <div>Restart Policy: {restartPolicy} </div>
+        <div>HostIP: {hostIP}</div>
+        <div>PodIP: {podIP} </div>
+        <div>StartTime: {startTime} </div>
+        
       </Modal>
     </div>
   );

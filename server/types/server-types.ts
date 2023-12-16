@@ -5,9 +5,22 @@ export type ServerError = {
 };
 
 export interface PodItem {
-  status: string,
-  namespace: string,
-  name: string
+  status: string;
+  namespace: string;
+  name: string;
+  creationTimestamp: any;
+  dnsPolicy: string;
+  containers: number;
+  restartPolicy: string;
+  hostIP: string;
+  podIP: string;
+  startTime: any;
 }
-export interface PodStatusCount {[key: string] : number}
-export interface NodeMemValue {'memUsed(kb)': number, 'capacity': number, 'percentage': string}
+export interface PodStatusCount {
+  [key: string]: number;
+}
+export interface NodeMemValue {
+  'memUsed(kb)': number;
+  capacity: number;
+  percentage: string;
+}
