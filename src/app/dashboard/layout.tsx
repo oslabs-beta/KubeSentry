@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import Sidebar from "@/src/app/ui/sidebar";
 import Banner from "../components/Banner";
+import { StateProvider } from '../components/StateProvider'
+
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   let initialBanner = true;
@@ -21,9 +23,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="w-full flex-none md:w-64 mt-8">
           <Sidebar />
         </div>
-        <div className="flex-grow p-6 md:overflow-y-auto md:p-12">
-          {children}
-        </div>
+        <StateProvider>
+          <div className="flex-grow p-6 md:overflow-y-auto md:p-12">
+            {children}
+          </div>
+        </StateProvider>
       </div>
     </>
   );

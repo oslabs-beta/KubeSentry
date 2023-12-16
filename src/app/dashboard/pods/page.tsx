@@ -2,6 +2,7 @@
 import { PodCard } from '@/src/app/ui/PodCard';
 import React from 'react';
 import { useState, useEffect } from 'react';
+import { useAppContext, useAppDispatch } from '../../components/StateProvider'
 
 export default function Page() {
   /*******************************USE STATE**************************************** */
@@ -12,8 +13,18 @@ export default function Page() {
     const data = await response.json();
     setPods(data['pods']);
   };
+  const { namespace } = useAppContext()!;
+  const dispatch = useAppDispatch()!;
+
+  useEffect(() => {
+    dispatch({
+      type: 'changeNamespace',
+      payload: 'NewNamespace',
+    });
+  }, [])
+
   //handle click function to be passed to the pod cards to delete
-  const handleClick = async (name, namespace) => {
+  const handleClick = async (name: string, namespace: string) => {
     //send a delete request to the next.js endpoint
     await fetch('http://localhost:3000/podapi', {
       method: 'DELETE',
