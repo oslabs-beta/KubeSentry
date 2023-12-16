@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import Modal from '@/src/app/ui/PodModal';
+import Modal from './PodModal';
 
 export type PodCardProps = {
   podName: string;
