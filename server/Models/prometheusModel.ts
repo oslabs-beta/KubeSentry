@@ -23,7 +23,7 @@ export function buildDateString(range=60, step=60): string {
 
 
 // Send a Prometheus API query using the following URL format:
-// http://url:PORT/api/v1/query_range?query={query}&start={}&end={}&step
+// http://localhost:PORT/api/v1/query_range?query={query}&start={}&end={}&step
 // @params {query}: Prometheus query (string)
 // @params {dateString}: start, end, step query parameters (string)
 // @returns PrometheusResponse
