@@ -1,6 +1,6 @@
-import express, {Request, Response, ErrorRequestHandler } from 'express';
+import express, {Application, Request, Response, ErrorRequestHandler } from 'express';
 import { ServerError } from './types/server-types'
-const app = express();
+const app:Application = express();
 const PORT = 8888;
 
 app.use(express.json());
@@ -34,6 +34,12 @@ const errHandler: ErrorRequestHandler = (err, _, res, __) => {
 }
 app.use(errHandler);
 
-app.listen(PORT, () => {
-  console.log(`app is listening on port ${PORT}`);
-});
+
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`Kube Sentry API server opened on port ${PORT}`);
+  });
+}
+
+// For testing
+export default app;

@@ -1,7 +1,8 @@
 'use client';
 import React, { useState } from 'react';
 import Modal from '@/src/app/ui/PodModal';
-type cardProps = {
+
+export type PodCardProps = {
   podName: string;
   podStatus: string;
   nameSpace: string;
@@ -14,7 +15,8 @@ type cardProps = {
   podIP: string;
   startTime: any;
 };
-export default function PodCard(props: cardProps) {
+
+export function PodCard(props: PodCardProps) {
   const {
     podName,
     podStatus,
@@ -36,7 +38,7 @@ export default function PodCard(props: cardProps) {
   };
 
   return (
-    <div className='relative flex flex-col justify-between h-64 rounded-3xl overflow-hidden shadow-lg border-solid bg-secondaryDark shadow-lg '>
+    <article className='relative flex flex-col justify-between h-64 rounded-3xl overflow-hidden shadow-lg border-solid bg-secondaryDark shadow-lg '>
       <button
         onClick={() => handleClick(podName, nameSpace)}
         className='absolute top-2 left-2'
@@ -71,6 +73,7 @@ export default function PodCard(props: cardProps) {
           More Info
         </button>
       </div>
+
       <Modal isOpen={isModalOpen} onClose={toggleModal}>
         <p>PodName: {podName}</p>
         <div>NameSpace: {nameSpace}</div>
@@ -81,8 +84,7 @@ export default function PodCard(props: cardProps) {
         <div>HostIP: {hostIP}</div>
         <div>PodIP: {podIP} </div>
         <div>StartTime: {startTime} </div>
-        
       </Modal>
-    </div>
+    </article>
   );
 }

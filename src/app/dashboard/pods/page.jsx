@@ -1,5 +1,5 @@
 'use client';
-import PodCard from '@/src/app/ui/PodCard';
+import { PodCard } from '@/src/app/ui/PodCard';
 import React from 'react';
 import { useState, useEffect } from 'react';
 
