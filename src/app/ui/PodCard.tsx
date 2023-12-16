@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Modal from './PodModal';
 import { PodItem } from '../../../types/types';
 
-//Each individual PodCard component which accepts Poditem and a handleClick function as props 
+//Each individual PodCard component which accepts Poditem and a handleClick function as props
 export function PodCard(props: { pod: PodItem; handleClick: Function }) {
   //destructuring props
   const {
@@ -16,21 +16,19 @@ export function PodCard(props: { pod: PodItem; handleClick: Function }) {
     restartPolicy,
     hostIP,
     podIP,
-    startTime,
   } = props.pod;
-  //destructuring handelick 
+  //destructuring handelick
   const handleClick = props.handleClick;
 
-  //state for tracking if the modal is open or not 
+  //state for tracking if the modal is open or not
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  //function to toggle the modal's open state. 
+  //function to toggle the modal's open state.
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
 
   return (
-    
     <article className='relative flex flex-col justify-between h-64 rounded-3xl overflow-hidden shadow-lg border-solid bg-secondaryDark shadow-lg '>
       {/* trash can icon for deleting the pod  */}
       <button
@@ -70,7 +68,7 @@ export function PodCard(props: { pod: PodItem; handleClick: Function }) {
           More Info
         </button>
       </div>
-      
+
       {/* Modal Component which is displayed based on the isModalOpen State.  */}
       <Modal isOpen={isModalOpen} onClose={toggleModal}>
         <p>PodName: {name}</p>
@@ -81,7 +79,6 @@ export function PodCard(props: { pod: PodItem; handleClick: Function }) {
         <div>Restart Policy: {restartPolicy} </div>
         <div>HostIP: {hostIP}</div>
         <div>PodIP: {podIP} </div>
-        <div>StartTime: {startTime.toString()} </div>
       </Modal>
     </article>
   );

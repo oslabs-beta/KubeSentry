@@ -37,7 +37,7 @@ export default function Page() {
       clearInterval(intervalId);
     };
   }, []);
-  //open icon for namespaces 
+  //open icon for namespaces
   const OpenIcon = () => (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -53,7 +53,7 @@ export default function Page() {
     </svg>
   );
 
-  //close icon for namespaces 
+  //close icon for namespaces
   const CloseIcon = () => (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -68,9 +68,9 @@ export default function Page() {
       />
     </svg>
   );
-//function to categorize pods by their namespace
+  //function to categorize pods by their namespace
   const categorizePodsByNamespace = (pods) => {
-    //grouping pods based on their namespaces 
+    //grouping pods based on their namespaces
     return pods.reduce((acc, pod) => {
       const namespace = pod.namespace;
       if (!acc[namespace]) {
@@ -81,17 +81,17 @@ export default function Page() {
     }, {});
   };
 
-  //state to track which namesapce is currently open 
+  //state to track which namesapce is currently open
   const [openNamespace, setOpenNamespace] = useState(null);
 
-  //function to toggle the open state of a namespace 
+  //function to toggle the open state of a namespace
   const toggleNamespace = (namespace) => {
     setOpenNamespace(openNamespace === namespace ? null : namespace);
   };
 
-  //function to render the namespaces with their respective pods 
+  //function to render the namespaces with their respective pods
   const renderNamespacesWithPods = (categorizedPods) => {
-    //mapping through each namespace and rendering them with their pods. 
+    //mapping through each namespace and rendering them with their pods.
     return Object.keys(categorizedPods).map((namespace) => (
       <div key={namespace}>
         <button
@@ -99,7 +99,7 @@ export default function Page() {
           className='flex items-center'
         >
           <span>{namespace}</span>
-          {openNamespace === namespace ? <CloseIcon /> : <OpenIcon />}
+          {openNamespace === namespace ? <OpenIcon /> : <CloseIcon />}
         </button>
         {openNamespace === namespace && (
           <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
@@ -111,8 +111,8 @@ export default function Page() {
       </div>
     ));
   };
-  
-  //invoking logic to categorize pods by their namesapces 
+
+  //invoking logic to categorize pods by their namesapces
   const categorizedPods = categorizePodsByNamespace(pods);
 
   return (

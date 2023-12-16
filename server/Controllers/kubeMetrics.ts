@@ -98,7 +98,6 @@ export const getPods: RequestHandler = async (_, res, next) => {
           restartPolicy: el.spec!.restartPolicy!,
           hostIP: el.status!.hostIP!,
           podIP: el.status!.podIP!,
-          startTime: el.status!.startTime!,
         });
         nameSpaces.add(el.metadata.namespace || 'default');
       } else {
