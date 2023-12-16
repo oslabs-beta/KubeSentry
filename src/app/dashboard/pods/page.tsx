@@ -13,14 +13,20 @@ export default function Page() {
     const data = await response.json();
     setPods(data['pods']);
   };
-  const { namespace } = useAppContext()!;
+  const { namespace, filterString } = useAppContext()!;
   const dispatch = useAppDispatch()!;
 
   useEffect(() => {
     dispatch({
       type: 'changeNamespace',
-      payload: 'NewNamespace',
+      namespace: 'NewNamespace',
     });
+
+    dispatch({
+      type: 'setFilterString',
+      filterString: 'Kube',
+    });
+
   }, [])
 
   //handle click function to be passed to the pod cards to delete

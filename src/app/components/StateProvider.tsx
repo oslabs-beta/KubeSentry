@@ -1,18 +1,26 @@
 "use client"
 import { createContext, useContext, useReducer, ReactElement, Dispatch } from 'react';
 
-type actionClass = ('changeNamespace' | null)
-type actionType =  {type: actionClass, payload: any};
-interface StateType {namespace: string};
-
+type actionClass = ('changeNamespace' | 'setFilterString' | 'clearFilterString' | null)
+type Action =  {
+  type: actionClass,
+  namespace?: string,
+  filterString?: string | null
+};
+const defaultState = { namespace: '', filterString: '' };
+type StateType = typeof defaultState;
 
 export const AppContext = createContext<StateType|null>(null);
-export const AppDispatchContext = createContext<Dispatch<actionType>|null>(null);
+export const AppDispatchContext = createContext<Dispatch<Action>|null>(null);
 
-const appContextReducer = (state: StateType, action: actionType) => {
+const appContextReducer = (state: StateType, action: Action): StateType => {
   switch (action.type) {
     case ('changeNamespace'): {
-      return {...state, namespace: action.payload};
+      return {...state, namespace: action.namespace!};
+    }
+    case ('setFilterString'): {
+      console.log('Filter string: ', action.filterString)
+      return {...state, filterString: action.filterString!};
     }
     default: {
       return state;
@@ -22,7 +30,6 @@ const appContextReducer = (state: StateType, action: actionType) => {
 
 export function StateProvider({ children }: {children: ReactElement | ReactElement[]}) {
 
-  const defaultState = {namespace: ''};
   const [appState, dispatch] = useReducer(appContextReducer, defaultState);
   return (
     <AppContext.Provider value={appState}>
