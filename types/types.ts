@@ -10,7 +10,7 @@ export interface PodItem {
   restartPolicy: string;
   hostIP: string;
   podIP: string;
-  startTime: Date;
+  startTime: any;
 }
 
 type PromMetricsData = any;
