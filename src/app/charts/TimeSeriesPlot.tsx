@@ -36,7 +36,7 @@ type timedata = {
 };
 
  //type error on options param
-function TimeSeriesPlotDisplay(data: timedata) {
+ function TimeSeriesPlotDisplay({ counter, time, title }) {
   const graphTextColor = 'rgba(255,255,255,0.75)';
   const chartRef = useRef(null);
 
@@ -98,11 +98,11 @@ function TimeSeriesPlotDisplay(data: timedata) {
   };
 
   const dataSet = {
-    labels: data.time,
+    labels: time,
     datasets: [
       {
-        label: data.title,
-        data: data.counter,
+        label: title,
+        data: counter,
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
       },
@@ -125,19 +125,27 @@ export default function TimeSeriesPlot(params: TimeSeriesParams) {
       let jsondata: PromMetricsData = await response.json();
       const { values } = jsondata;
       //only update if we get something back from prometheus
+      //do this way to not mutate the state
+      const timeCopy = [...time];
+      const counterCopy = [...counter];
       if (values) {
         values.forEach((el: [number, string]) => {
-          time.push(new Date(el[0] * 1000));
-          counter.push(Number(el[1]));
+          timeCopy.push(new Date(el[0] * 1000));
+          counterCopy.push(Number(el[1]));
         });
         console.log('Got values: ', values)
-        setTime(time);
-        setCounter(counter);
+        setTime(timeCopy);
+        setCounter(counterCopy);
       }
     }, 5000);
     //cleanup code
     return () => clearInterval(id);
   }, [counter, time]);
 
-  return <>{TimeSeriesPlotDisplay({ time: time, counter: counter, title: params.title })}</>;
+  return (
+    <TimeSeriesPlotDisplay time={time} counter={counter} title={params.title} />
+  )
+
+  // commented out this {TimeSeriesPlotDisplay({ time={time}, counter={counter}, title: params.title })}</>;
 }
+
