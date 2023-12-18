@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { AlertCard } from '../../ui/AlertCard';
 
 export default function Page() {
   const [alertdata, setalertData] = useState([]);
@@ -11,14 +12,16 @@ export default function Page() {
       .then((data) => {
         //make an array of log components and put it on the page
         let aa = [...data];
-        let bb = aa.map((el) => JSON.stringify(el));
+        let bb = aa.map((el) => el.alerts[0]);
         setalertData([...bb]);
       });
   }, []);
-  //const alerts = data.map((el) => <h2>{JSON.stringify(el)}</h2>);
-  return (
-    <div>
-      <h1>{alertdata}</h1>
-    </div>
-  );
+
+  //populate the alertcards array
+  const alertCardsArray = [];
+  for (let i = alertdata.length - 1; i >= 0; i--) {
+    alertCardsArray.push(<AlertCard alert={alertdata[i]} />);
+  }
+
+  return <div>{alertCardsArray}</div>;
 }

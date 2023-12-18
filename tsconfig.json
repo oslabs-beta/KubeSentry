@@ -44,7 +44,7 @@
     "src/app/dashboard/report/page.tsx",
     "src/app/dashboard/resource/page.tsx",
     "src/app/dashboard/layout.tsx",
-    "src/app/ui/sidebar.tsx",
+    "src/app/ui/*.tsx",
   ],
   "exclude": [
     "node_modules",
