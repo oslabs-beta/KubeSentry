@@ -44,6 +44,7 @@ export default function PieChart() {
     const id = setInterval(() => {
       getPieData().then((data) => {
         if (data) {
+          console.log('Number of pods', data)
           if (!objCompare(data, piedata)) {
             setPieData(Object.assign({}, data));
           }
@@ -68,12 +69,8 @@ export default function PieChart() {
       {
         data: Object.keys(piedata).map((c) => piedata[c]),
         backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(255, 159, 64, 0.2)',
+          'rgba(124,252,0,0.6)',
+          'rgb(250,128,114)',
         ],
         borderColor: [
           'rgba(255, 99, 132, 1)',

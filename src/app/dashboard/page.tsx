@@ -36,8 +36,32 @@ const MEM_QUERY = `
   / avg(node_memory_MemTotal_bytes))
   * 100
 `;
+/*
+it measures how many seconds of I/O time were spent on average per second during the
+given interval. For example:
+If the result is 0.5, it means that, on average, the disk spent half a second on I/O operations
+for every second in the specified interval.
+A value close to 1 would indicate that the disk was almost continuously busy with I/O operations.
+In here we are returning an average rate of X milliseconds of disk I/O time per second.
+*/
 
+const IO_PER_SECOND_QUERY = `
+rate(node_disk_io_time_seconds_total[1m])
+`;
 
+/*
+The rate of DNS requests (per second) over the past 5 minutes using either
+the coredns_dns_request_count_total or coredns_dns_requests_total metrics,
+depending on which one is available.
+So, the final output of your query will be the total rate of DNS requests
+handled per second, grouped by protocol, over the past 5 minutes.
+*/
+const DNS_RATE_REQUEST =
+`
+sum(rate(coredns_dns_request_count_total[5m])) by (proto)
+or
+sum(rate(coredns_dns_requests_total[5m])) by (proto)
+`
 
 
 export default function Page() {
@@ -64,20 +88,37 @@ export default function Page() {
         onSearch={handleSearchButtonClick}
       />
       <div className='flex flex-column'>
-        <div style={style}>
-          <TimeSeriesPlot query={'sum(rate(coredns_dns_requests_total[2m]))'} title={'CoreDNS Requests'} />
-        </div>
-        <div style={style}>
-          <TimeSeriesPlot query={'sum(rate(coredns_dns_responses_total[2m]))'} title={'CoreDNS Responses'} />
-        </div>
-        <div style={style}>
-          <TimeSeriesPlot query={MEM_QUERY} title={''} />
-        </div>
 
+      <h1 className="text-3xl font-bold mt-4">Sentry Dashboard</h1>
 
-
-              </div>
-      <div className="flex flow-row justify-center">
+      <div className="dashboard-wrapper flex flex-col">
+        <h3>Resource Metrics</h3>
+        <div className='flex'>
+          <div style={style}>
+            <TimeSeriesPlot query={ CPU_QUERY } title={'CPU Usage'} />
+          </div>
+          <div style={style}>
+            <TimeSeriesPlot query={ CPU_AVERAGE_QUERY } title={'AVG CPU Usage'} />
+          </div>
+          <div style={style}>
+            <TimeSeriesPlot query={ MEM_QUERY } title={'RAM Usage'} />
+          </div>
+        </div>
+        <h3>Others</h3>
+        <div className='flex'>
+          <div style={style}>
+            <TimeSeriesPlot query={ IO_PER_SECOND_QUERY } title={'IO per sec'} />
+          </div>
+        </div>
+        <h3>Network Metrics</h3>
+        <div className='flex'>
+          <div style={style}>
+            <TimeSeriesPlot query={ DNS_RATE_REQUEST } title={'DNS Request per 5m'} />
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col justify-center">
+        <h3>Number of Running/Pending Pods</h3>
         <div style={style}>
           <PieChart />
         </div>
