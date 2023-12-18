@@ -4,6 +4,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { useEffect, useState, useRef } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { objCompare } from '../../util/utils'
+import { PieChartData } from '../../../types/types'
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
