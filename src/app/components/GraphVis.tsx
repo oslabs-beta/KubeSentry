@@ -17,6 +17,20 @@ import '../styles/graph.css';
 // Cytoscape.use(cytoscapeCoseBilkent);
 Cytoscape.use(require('cytoscape-dom-node'));
 
+
+// Append a list of colors
+// const palette = ["#22577a","#38a3a5","#c8b8db","#d1efb5","#bf4e30"];
+// let head = document.head || document.getElementsByTagName('head')[0];
+// let cssStyle = document.createElement('style');
+// head.appendChild(cssStyle);
+// cssStyle.appendChild(document.createTextNode(
+//   palette.map((c, i) => `.namespace${i} { background-color: ${c}}`).join('\n')
+// ));
+
+
+
+
+
 // Cluster:
 const style: Cytoscape.Stylesheet[] = [
     {
@@ -68,18 +82,6 @@ const graphStyle =  {
   'backgroundColor': '#222222',
   'borderRadius': '10px'
 }
-
-const palette = ["#22577a","#38a3a5","#c8b8db","#d1efb5","#bf4e30"];
-
-palette.forEach((color, i) => {
-  style.push({
-    selector: `.namespace${i}`,
-    style: {
-      'background-color': color
-    }
-  })
-
-})
 
 const layoutStyle =  {
   name: 'cose',
@@ -152,7 +154,6 @@ export default function GraphVis() {
 
       // Build list of graph elements.
       const newElements:ElementsType = []
-
       const namespaces = new Map<string,number>();
       function getNamespaceId(ns: string) {
         if (!(ns in namespaces)) {
@@ -162,20 +163,10 @@ export default function GraphVis() {
       }
 
       function cy_node_def(id: string, label: string, classes: string[]): Cytoscape.ElementDefinition {
+        // Add a blank container for React.createPortal to render into
         let node_container = document.createElement("div");
-        // let container = document.createElement("div");
-        // node_container.appendChild(container)
-        // container.className = 'cy-node w-fit flex flex-col border hover:border-2 p-0.5';
-        // // container.innerHTML = `<div class="flex flex-row whitespace-nowrap">${label}</div> <span class="whitespace-nowrap">${HTML_Label || id}</span>`;
-        // container.innerHTML = `<div class="flex flex-row items-center whitespace-nowrap p-0.5"><div>${label}</div><div class='statusDot'></div></div>`;
-
-
         return {
-          'data': {
-            id,
-            label,
-            'dom': node_container,
-          },
+          'data': { id, label, 'dom': node_container, },
           classes,
           'renderedPosition': { x: 100, y: 100 }
         };
@@ -236,20 +227,20 @@ export default function GraphVis() {
       key={uuidv4()}
       layout={layoutStyle}
       cy={cy => {
-        // Add domNode drawing
+        // Grab ref to cytoscape.Core Graph API
+        // Install domNode extension
         cy.domNode();
         myCyRef.current = cy
         // Add context menu
         // let menu = cyGraph.cxtmenu( defaults );
-      }} // Grab ref to cytoscape.Core
+      }}
     />
     {
     elements
       .filter(el => el.data.dom)
       .map(el => {
-        console.log('el element: ', el);
         return createPortal(
-          <div className='cy-node w-fit flex flex-col border hover:border-2 p-0.5'>
+          <div className={'cy-node w-fit flex flex-col border hover:border-2 p-0.5 ' + (el.classes! as string[]).join(' ')}>
             <div className="flex flex-row items-center whitespace-nowrap p-0.5">
               <div>{el.data.label}</div>
               <div className='statusDot' />
