@@ -1,13 +1,18 @@
 "use client";
 
-import { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, ReactNode } from 'react';
+import { createPortal } from 'react-dom';
+
 import CytoscapeComponent from 'react-cytoscapejs';
 import Cytoscape from 'cytoscape';
 // import cytoscapeCoseBilkent from "cytoscape-cose-bilkent";
 import { KubeGraphData } from '../../../types/types';
 import { v4 as uuidv4 } from 'uuid';
-
 import '../styles/graph.css';
+
+// Cytoscape bug:
+// endBatch() line 12745 needs to add
+//       if (!renderer) return this;
 
 // Cytoscape.use(cytoscapeCoseBilkent);
 Cytoscape.use(require('cytoscape-dom-node'));
@@ -131,13 +136,12 @@ let defaults = {
   outsideMenuCancel: false as const // if set to a number, this will cancel the command if the pointer is released outside of the spotlight, padded by the number given
 };
 
-
-const placeholderElements: Cytoscape.ElementDefinition[] = [ ];
+type ElementsType = Cytoscape.ElementDefinition[];
 
 export default function GraphVis() {
 
   let myCyRef = useRef<(cytoscape.Core | null)>(null);
-  const [elements, setElements] = useState<any>(placeholderElements);
+  const [elements, setElements] = useState<ElementsType>([]);
   let didSetData = false;
 
   const buildGraph = async () => {
@@ -147,7 +151,7 @@ export default function GraphVis() {
       console.log('Server response: ', data)
 
       // Build list of graph elements.
-      const elements:Cytoscape.ElementDefinition[] = []
+      const newElements:ElementsType = []
 
       const namespaces = new Map<string,number>();
       function getNamespaceId(ns: string) {
@@ -157,18 +161,20 @@ export default function GraphVis() {
         return namespaces.get(ns)!;
       }
 
-      function cy_node_def(id: string, label: string, classes: string[], HTML_Label: string | undefined) {
-        let div = document.createElement("div");
-        let container = document.createElement("div");
-        div.appendChild(container)
-        container.className = 'cy-node w-fit flex flex-col border hover:border-2 p-0.5';
-        // container.innerHTML = `<div class="flex flex-row whitespace-nowrap">${label}</div> <span class="whitespace-nowrap">${HTML_Label || id}</span>`;
-        container.innerHTML = `<div class="flex flex-row items-center whitespace-nowrap p-0.5"><div>${label}</div><div class='statusDot'></div></div>`;
+      function cy_node_def(id: string, label: string, classes: string[]): Cytoscape.ElementDefinition {
+        let node_container = document.createElement("div");
+        // let container = document.createElement("div");
+        // node_container.appendChild(container)
+        // container.className = 'cy-node w-fit flex flex-col border hover:border-2 p-0.5';
+        // // container.innerHTML = `<div class="flex flex-row whitespace-nowrap">${label}</div> <span class="whitespace-nowrap">${HTML_Label || id}</span>`;
+        // container.innerHTML = `<div class="flex flex-row items-center whitespace-nowrap p-0.5"><div>${label}</div><div class='statusDot'></div></div>`;
+
 
         return {
           'data': {
-            'id': id,
-            'dom': div,
+            id,
+            label,
+            'dom': node_container,
           },
           classes,
           'renderedPosition': { x: 100, y: 100 }
@@ -181,8 +187,8 @@ export default function GraphVis() {
       data.nodeList.forEach(node => {
         let nodeName = node.metadata!.name!;
         let namespaceId = getNamespaceId(node.metadata!.namespace!);
-        const newNodeDef = cy_node_def(nodeName, nodeName, ['kNode', `namespace${namespaceId}`], undefined);
-        elements.push(newNodeDef);
+        const newNodeDef = cy_node_def(nodeName, nodeName, ['kNode', `namespace${namespaceId}`]);
+        newElements.push(newNodeDef);
       })
 
 
@@ -191,20 +197,16 @@ export default function GraphVis() {
         const containerName = pod.spec!.containers[0].name!;
         const nodeName = pod.spec!.nodeName!;
         let namespaceId = getNamespaceId(pod.metadata!.namespace!);
-        // const ctr = pod.spec!.containers;
-        // const label = `node_affinity_${podName}`;
-        const newNodeDef = cy_node_def(podName, containerName, ['pod', `namespace${namespaceId}`], pod.metadata!.name!);
+        const newNodeDef = cy_node_def(podName, containerName, ['pod', `namespace${namespaceId}`]);
         console.log('Adding pod: ', pod);
-        elements.push(newNodeDef);
-        elements.push( { data: { source: nodeName, target: podName, } })
+        newElements.push(newNodeDef);
+        newElements.push( { data: { source: nodeName, target: podName, } })
       })
 
 
 
       if (!didSetData) {
-        // console.log('Enabling domNode()')
-        // cyGraph.domNode();
-        setElements( elements )
+        setElements( newElements )
         didSetData = true;
       }
     }
@@ -226,6 +228,7 @@ export default function GraphVis() {
 
 
   return (
+    <>
     <CytoscapeComponent
       elements={elements}
       style={graphStyle}
@@ -240,5 +243,20 @@ export default function GraphVis() {
         // let menu = cyGraph.cxtmenu( defaults );
       }} // Grab ref to cytoscape.Core
     />
+    {
+    elements
+      .filter(el => el.data.dom)
+      .map(el => {
+        console.log('el element: ', el);
+        return createPortal(
+          <div className='cy-node w-fit flex flex-col border hover:border-2 p-0.5'>
+            <div className="flex flex-row items-center whitespace-nowrap p-0.5">
+              <div>{el.data.label}</div>
+              <div className='statusDot' />
+            </div>
+          </div>, el.data.dom);
+      })
+    }
+    </>
   );
 }
