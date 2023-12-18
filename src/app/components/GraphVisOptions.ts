@@ -52,24 +52,31 @@ export const graphCssStyle =  {
   'borderRadius': '10px'
 }
 
-export const layoutOptions: LayoutOptions =  {
-  name: 'cose',
-  idealEdgeLength: (_) => 250,
-  nodeOverlap: 20,
-  refresh: 20,
-  fit: false,
-  padding: 30,
-  randomize: false,
-  componentSpacing: 100,
-  nodeRepulsion: (_) => 400000,
-  edgeElasticity: (_) => 100,
-  nestingFactor: 5,
-  gravity: 80,
-  numIter: 1000,
-  initialTemp: 200,
-  coolingFactor: 0.95,
-  minTemp: 1.0
-}
+export const layoutOptions: any = {
+  name: 'cose-bilkent',
+  quality: 'default',
+  nodeDimensionsIncludeLabels: false,
+  refresh: 30,
+  fit: true,
+  padding: 10,
+  randomize: true,
+  nodeRepulsion: 4500,
+  idealEdgeLength: 350,
+  edgeElasticity: 0.45,
+  nestingFactor: 0.1,
+  gravity: 0.25,
+  numIter: 2500,
+  tile: true,
+  animate: 'end',
+  animationDuration: 500,
+  tilingPaddingVertical: 10,
+  tilingPaddingHorizontal: 10,
+  gravityRangeCompound: 1.5,
+  gravityCompound: 1.0,
+  gravityRange: 3.8,
+  initialEnergyOnIncremental: 0.5
+};
+
 
 
 // the default values of each option are outlined below:

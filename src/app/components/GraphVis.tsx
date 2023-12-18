@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 
 import CytoscapeComponent from 'react-cytoscapejs';
 import Cytoscape from 'cytoscape';
+import cytoscapeCoseBilkent from "cytoscape-cose-bilkent";
 import { KubeGraphData } from '../../../types/types';
 import { v4 as uuidv4 } from 'uuid';
 import '../styles/graph.css';
@@ -14,6 +15,7 @@ import '../styles/graph.css';
 
 // Styling options
 import { layoutOptions, graphCssStyle, graphCytoStyle } from './GraphVisOptions';
+Cytoscape.use(cytoscapeCoseBilkent);
 Cytoscape.use(require('cytoscape-dom-node'));
 
 // NOTE: Cytoscape bug:

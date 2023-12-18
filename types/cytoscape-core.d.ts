@@ -1,5 +1,3 @@
-// declare module 'cytoscape-cose-bilkent';
-
 // cytoscape.d.ts
 import cytoscape, { Core } from 'cytoscape';
 
