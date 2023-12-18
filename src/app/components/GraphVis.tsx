@@ -3,9 +3,13 @@
 import { useEffect, useState, useRef } from 'react';
 import CytoscapeComponent from 'react-cytoscapejs';
 import Cytoscape from 'cytoscape';
+// import cytoscapeCoseBilkent from "cytoscape-cose-bilkent";
 import { KubeGraphData } from '../../../types/types';
 import { v4 as uuidv4 } from 'uuid';
 
+import '../styles/graph.css';
+
+// Cytoscape.use(cytoscapeCoseBilkent);
 Cytoscape.use(require('cytoscape-dom-node'));
 
 // Cluster:
@@ -15,8 +19,9 @@ const style: Cytoscape.Stylesheet[] = [
       style: {
         color: '#ddd',
         shape: 'round-rectangle',
-        width: 50,
-        height: 50,
+        width: 10,
+        height: 10,
+        opacity: 0,
         'background-color': '#444',
         'border-width': 2,
         'overlay-padding': 5
@@ -25,8 +30,8 @@ const style: Cytoscape.Stylesheet[] = [
     {
       selector: '.kNode',
       style: {
-        width: 70,
-        height: 80,
+        width: 10,
+        height: 10,
         'background-color': '#66d',
         label: undefined,
         'content': 'data(label)',
@@ -152,18 +157,17 @@ export default function GraphVis() {
         return namespaces.get(ns)!;
       }
 
-      function cy_node_def(id: string, label: string, classes: string[]) {
-        // let id = `n${cy.nodes().length}`;
+      function cy_node_def(id: string, label: string, classes: string[], HTML_Label: string | undefined) {
         let div = document.createElement("div");
-        div.innerHTML = `node ${label}`;
-        div.className = 'my-cy-node';
-        div.style.width = `${Math.floor(Math.random() * 40) + 60}px`;
-        div.style.height = `${Math.floor(Math.random() * 30) + 50}px`;
+        let container = document.createElement("div");
+        div.appendChild(container)
+        container.className = 'cy-node w-fit flex flex-col border hover:border-2 p-0.5';
+        // container.innerHTML = `<div class="flex flex-row whitespace-nowrap">${label}</div> <span class="whitespace-nowrap">${HTML_Label || id}</span>`;
+        container.innerHTML = `<div class="flex flex-row items-center whitespace-nowrap p-0.5"><div>${label}</div><div class='statusDot'></div></div>`;
 
         return {
           'data': {
             'id': id,
-            'label': label,
             'dom': div,
           },
           classes,
@@ -177,8 +181,7 @@ export default function GraphVis() {
       data.nodeList.forEach(node => {
         let nodeName = node.metadata!.name!;
         let namespaceId = getNamespaceId(node.metadata!.namespace!);
-        const newNodeDef = cy_node_def(nodeName, nodeName, ['kNode', `namespace${namespaceId}`]);
-        console.log('NodeDef: ', newNodeDef);
+        const newNodeDef = cy_node_def(nodeName, nodeName, ['kNode', `namespace${namespaceId}`], undefined);
         elements.push(newNodeDef);
       })
 
@@ -188,19 +191,17 @@ export default function GraphVis() {
         const containerName = pod.spec!.containers[0].name!;
         const nodeName = pod.spec!.nodeName!;
         let namespaceId = getNamespaceId(pod.metadata!.namespace!);
-        const label = `node_affinity_${podName}`;
-        const newNodeDef = cy_node_def(podName, containerName, ['pod', `namespace${namespaceId}`]);
-        console.log('NodeDef: ', newNodeDef);
+        // const ctr = pod.spec!.containers;
+        // const label = `node_affinity_${podName}`;
+        const newNodeDef = cy_node_def(podName, containerName, ['pod', `namespace${namespaceId}`], pod.metadata!.name!);
+        console.log('Adding pod: ', pod);
         elements.push(newNodeDef);
         elements.push( { data: { source: nodeName, target: podName, } })
       })
 
 
-      let cyGraph = myCyRef.current!;
 
       if (!didSetData) {
-        // Add context menu
-        // let menu = cyGraph.cxtmenu( defaults );
         // console.log('Enabling domNode()')
         // cyGraph.domNode();
         setElements( elements )
@@ -235,6 +236,8 @@ export default function GraphVis() {
         // Add domNode drawing
         cy.domNode();
         myCyRef.current = cy
+        // Add context menu
+        // let menu = cyGraph.cxtmenu( defaults );
       }} // Grab ref to cytoscape.Core
     />
   );

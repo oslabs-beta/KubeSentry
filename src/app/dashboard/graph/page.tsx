@@ -1,5 +1,5 @@
 'use client';
-import GraphVis from '@/src/app/components/GraphVis';
+import GraphVis from '../../components/GraphVis';
 import React from 'react';
 import { useState, useEffect } from 'react';
 
