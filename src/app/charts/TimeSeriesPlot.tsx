@@ -106,7 +106,9 @@ type timedata = {
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
       },
+      
     ],
+    
   };
 
   return <Line data={dataSet} ref={chartRef} options={options} />;
