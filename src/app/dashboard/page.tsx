@@ -63,31 +63,24 @@ or
 sum(rate(coredns_dns_requests_total[5m])) by (proto)
 `
 
-
 export default function Page() {
-  //set state and function to handle change in search input
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  function handleSearch(event: ChangeEvent<HTMLInputElement>) {
-    setSearchQuery(event.target.value);
-  }
+
   //handle button click when user search for something
-  function handleSearchButtonClick() {
+  function handleSearchButtonClick(value: string) {
     //edge case to handle when user leave search query blank
-    if (searchQuery === '') return;
-    alert(`Searching for ${searchQuery}`);
-    setSearchQuery('');
+    alert(`Searching for ${value}`);
   }
 
   const style = { width: '50%' };
 
   return (
-    <div className='bg-secondaryDark rounded-md text-white min-h-screen p-8'>
-      <SearchBar
-        value={searchQuery}
-        onChange={handleSearch}
-        onSearch={handleSearchButtonClick}
-      />
-      <div className='flex flex-column'>
+    <div className="bg-secondaryDark rounded-md text-white min-h-screen p-8">
+      <h1 className="text-3xl font-bold mt-4 mb-8">Sentry Dashboard</h1>
+      <div className='mb-8'>
+        <SearchBar
+          onSearch={handleSearchButtonClick}
+        />
+      </div>
 
       <h1 className="text-3xl font-bold mt-4">Sentry Dashboard</h1>
 

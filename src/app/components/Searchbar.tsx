@@ -1,19 +1,28 @@
 import React, { useState, ChangeEvent } from 'react';
 
 export default function SearchBar({
-  value,
-  onChange,
   onSearch,
 }: {
-  value: string;
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  onSearch: () => void;
+  onSearch: (query: string) => void;
 }) {
+
+  //set state and function to handle change in search input
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  function handleSearch(event: ChangeEvent<HTMLInputElement>) {
+    setSearchQuery(event.target.value);
+  }
+  function handleSubmit(event: React.SyntheticEvent){
+    event.preventDefault()
+    if (searchQuery === '') return;
+    onSearch(searchQuery)
+    setSearchQuery('');
+  }
+
   return (
     <div className='search-bar-wrapper'>
       <div className='search-bar flex text-black '>
-        <form className='flex w-full '>
-          <button onClick={onSearch}>
+        <form className='flex w-full p-relative' onSubmit={handleSubmit}>
+          <button type='submit'>
             <svg
               width='35'
               height='35'
@@ -34,8 +43,8 @@ export default function SearchBar({
             className='w-full pl-2 rounded-md'
             type='text'
             placeholder='search....'
-            value={value}
-            onChange={onChange}
+            value={searchQuery}
+            onChange={handleSearch}
           />
         </form>
       </div>
