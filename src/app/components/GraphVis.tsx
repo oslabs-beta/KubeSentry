@@ -60,6 +60,9 @@ export default function GraphVis() {
       function cy_node_def(id: string, label: string, classes: string[]): Cytoscape.ElementDefinition {
         // Create a div for each element using cytoscape-dom-node.
         // createPortal() will render the contents of these nodes.
+        if (!id) {
+          console.trace(`Unknown ID: ${id} ${label} ${classes}`)
+        }
         let node_container = document.createElement("div");
         return {
           'data': { id, label, 'dom': node_container, },
@@ -82,15 +85,24 @@ export default function GraphVis() {
       // Add each Kubernetes namespace as a Cytoscape graph node.
       // Assume only one node for now, one node per namespace
       const clusterNodeId = newElements[0].data.id;
+
+      // Namespace parent item
       for (const [namespace, id] of namespaces.entries()) {
+        // Why do we get an undefined one?
+        if (!namespace) continue;
+
         newElements.push( {
-          'data': { id: namespace, label: namespace },
-          classes: ['namespace', `namespace${id}`],
+          'data': { id: namespace + "_parent", label: namespace },
+          classes: ['namespace_parent', `namespace${id}`],
         })
 
-        // const newNodeDef = cy_node_def(namespace, namespace, ['kNode', `namespace${id}`]);
-        // newElements.push(newNodeDef)
-        // newElements.push( { data: { source: namespace + "_parent", target: namespace } })
+        // Namespace center item
+        const newNodeDef = cy_node_def(namespace, namespace, ['namespace', `namespace${id}`]);
+        newNodeDef.data.parent = namespace + "_parent";
+        newElements.push( newNodeDef)
+
+        // Edge from node to namespace center item
+        newElements.push( { data: { source: clusterNodeId, target: namespace }, classes:'node_to_ns' })
 
       }
 
@@ -104,10 +116,11 @@ export default function GraphVis() {
         const namespace = pod.metadata!.namespace!;
         let namespaceId = getNamespaceId(namespace);
         const newNodeDef = cy_node_def(podName, containerName, ['pod', `namespace${namespaceId}`]);
-        newNodeDef.data.parent = namespace;
+        newNodeDef.data.parent = namespace + "_parent";
         newElements.push(newNodeDef);
         // Attach an edge from each pod to the node it's running on.
-        newElements.push( { data: { source: nodeName, target: podName, } })
+        // const e: Cytoscape.ElementDefinition;
+        newElements.push( { data: { source: namespace, target: podName } , classes: 'ns_to_pod'})
       })
 
       setElements( newElements )
@@ -154,7 +167,7 @@ export default function GraphVis() {
       .filter(el => el.data.dom)
       .map(el => {
         return createPortal(
-          <div className={'cy-node w-fit flex flex-col border hover:border-2 p-0.5 ' + (el.classes! as string[]).join(' ')}>
+          <div className={'cy-node w-fit flex flex-col border hover:border-2 p-0.5' + ` ${el.data.id} ` + (el.classes! as string[]).join(' ')}>
             <div className="flex flex-row items-center whitespace-nowrap p-0.5">
               <div>{el.data.label}</div>
               <div className='statusDot' />

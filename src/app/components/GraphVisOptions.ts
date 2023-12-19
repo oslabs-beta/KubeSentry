@@ -1,4 +1,5 @@
-import { Stylesheet, LayoutOptions } from "cytoscape";
+import { Stylesheet, LayoutOptions, ElementDefinition } from "cytoscape";
+import CytoscapeComponent from "react-cytoscapejs";
 
 // Cluster:
 export const graphCytoStyle: Stylesheet[] = [
@@ -68,10 +69,11 @@ export const layoutOptions: any = {
   padding: 10,
   randomize: true,
   nodeRepulsion: 4500,
-  idealEdgeLength: 350,
-  edgeElasticity: 0.45,
+  idealEdgeLength:100,
+  // idealEdgeLength: (edge: ElementDefinition) => {return edge.classes === "node_to_ns" ? 450 : 150},
+  edgeElasticity: .8,
   nestingFactor: 0.1,
-  gravity: 0.25,
+  gravity: 0,
   numIter: 2500,
   tile: true,
   animate: 'end',
