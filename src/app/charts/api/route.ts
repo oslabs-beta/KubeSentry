@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { PromMetricsData } from '../../../../types/types';
 
 export async function GET(request: Request) : Promise<PromMetricsData> {
   let res = await fetch('http://localhost:8888/metrics/prom', {
