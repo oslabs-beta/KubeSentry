@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { KubePodsStatus } from '../../../types/types';
 
 export async function GET(request: Request): Promise<KubePodsStatus> {
   let res = await fetch('http://localhost:8888/metrics/kubePods', {
