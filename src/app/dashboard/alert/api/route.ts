@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
-import { PromMetricsData } from '../../../../types/types';
 
-export async function GET(request: Request) : Promise<PromMetricsData> {
-  let res = await fetch('http://localhost:8888/metrics/prom', {
+export async function GET(request: Request): Promise<any> {
+  let res = await fetch('http://localhost:8888/metrics/alertlogs', {
     cache: 'no-store',
   });
-  let data: PromMetricsData = await res.json();
+  let data: any = await res.json();
+  console.log('in the server of next');
   return NextResponse.json(data);
 }
 
