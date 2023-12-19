@@ -1,4 +1,5 @@
 'use client';
+import { PromMetricsData } from '../../../types/types';
 
 import 'chartjs-adapter-date-fns';
 import { useState, useEffect, useRef } from 'react';

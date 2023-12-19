@@ -25,7 +25,8 @@ import { Line } from 'react-chartjs-2';
 import mock_data from "../../../build/mock_data.json";
 
 
-function LinePlotDisplay ({ data }) {
+function LinePlotDisplay (props: any) {
+  const {data} = props;
   const graphTextColor = 'rgba(255,255,255,0.75)';
   const yAxisTitle = 'Data';
 
@@ -39,7 +40,7 @@ function LinePlotDisplay ({ data }) {
       }
     },
     responsive: true,
-    animation: false,
+    animation: false as const,
     scales: {
       y: {
         ticks: {
