@@ -44,11 +44,15 @@ export default function GraphVis() {
       const newElements:ElementsType = []
       const namespaces = new Map<string,number>();
       function getNamespaceId(ns: string) {
-        if (!(ns in namespaces)) {
+        if (!(namespaces.has(ns))) {
           namespaces.set(ns, namespaces.size);
         }
-        return namespaces.get(ns)!;
+        return namespaces.get(ns);
       }
+
+      // Add namespaces. Assume there's at least one pod in each NS.
+      data.pods.forEach(pod => getNamespaceId(pod.metadata!.namespace!));
+
 
       // Helper function used to build graph nodes.
       function cy_node_def(id: string, label: string, classes: string[]): Cytoscape.ElementDefinition {
@@ -73,6 +77,18 @@ export default function GraphVis() {
       })
 
 
+      // Add each Kubernetes namespace as a Cytoscape graph node.
+      // Assume only one node for now, one node per namespace
+      const clusterNodeId = newElements[0].data.id;
+      for (const [namespace, id] of namespaces.entries()) {
+        const newNodeDef = cy_node_def(namespace, namespace, ['kNode', `namespace${id}`]);
+        newElements.push(newNodeDef);
+        // Attach an edge from each pod to the node it's running on.
+        newElements.push( { data: { source: clusterNodeId, target: namespace } })
+      }
+
+
+
       // Add each Kubernetes pod.
       data.pods.forEach(pod => {
         const podName = pod.metadata!.name!;
@@ -82,7 +98,7 @@ export default function GraphVis() {
         const newNodeDef = cy_node_def(podName, containerName, ['pod', `namespace${namespaceId}`]);
         newElements.push(newNodeDef);
         // Attach an edge from each pod to the node it's running on.
-        newElements.push( { data: { source: nodeName, target: podName, } })
+        newElements.push( { data: { source: pod.metadata!.namespace!, target: podName, } })
       })
 
       setElements( newElements )
