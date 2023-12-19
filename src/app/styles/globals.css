@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+yt {
+  color: gold;
+}
+
 /* /* :root {
   --foreground-rgb: 12, 12, 12;
   --background-start-rgb: 214, 219, 220;
