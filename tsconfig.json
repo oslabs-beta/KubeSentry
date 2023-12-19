@@ -33,6 +33,7 @@
     "**/*.tsx",
     "__test__/*.tsx",
     ".next/types/**/*.ts",
+    "./index.d.ts",
     "src/app/layout.tsx",
     "src/app/app.tsx",
     "src/app/not-found.tsx",
