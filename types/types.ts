@@ -1,4 +1,4 @@
-type PieChartData = { [key: string]: number };
+export type PieChartData = { [key: string]: number };
 
 export interface PodItem {
   status: string;

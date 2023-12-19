@@ -1,6 +1,11 @@
 import { XMarkIcon } from '@heroicons/react/20/solid'
+import { MouseEventHandler } from 'react';
 
-export default function Banner({closeBanner}) {
+type BannerProps = { closeBanner: MouseEventHandler<HTMLButtonElement> };
+
+
+export default function Banner(props: BannerProps) {
+  const { closeBanner } = props;
   return (
     <div className="relative isolate flex items-center gap-x-6 overflow-hidden bg-gray-50 px-6 py-2.5 sm:px-3.5 sm:before:flex-1">
       <div
@@ -36,7 +41,7 @@ export default function Banner({closeBanner}) {
           <svg viewBox="0 0 2 2" className="mx-2 inline h-0.5 w-0.5 fill-current" aria-hidden="true">
             <circle cx={1} cy={1} r={1} />
           </svg>
-          Join us and be part of our crew 
+          Join us and be part of our crew
         </p>
         <a
           href="#"
@@ -46,8 +51,8 @@ export default function Banner({closeBanner}) {
         </a>
       </div>
       <div className="flex flex-1 justify-end">
-        <button 
-          type="button" 
+        <button
+          type="button"
           className="-m-3 p-3 focus-visible:outline-offset-[-4px]"
           onClick={closeBanner}>
           <span className="sr-only">Dismiss</span>
