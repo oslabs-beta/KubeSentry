@@ -21,7 +21,7 @@ export default function PieChart() {
     try {
       // console.log('start getting data');
       //do not cache the fetch request.
-      let response = await fetch('http://localhost:3000/api/podStatus', {
+      let response = await fetch('/api/podStatus', {
         cache: 'no-store',
       });
       //convert to js readable

@@ -7,7 +7,7 @@ export default function Page(): ReactElement {
   const [alertdata, setalertData] = useState<any[]>([]);
   //make a fetch request to the database and get a list of the logs in there with time stamps
   useEffect(() => {
-    fetch('http://localhost:3000/dashboard/alert/api')
+    fetch('/dashboard/alert/api')
       .then((data) => data.json())
       .then((data) => {
         //make an array of log components and put it on the page
