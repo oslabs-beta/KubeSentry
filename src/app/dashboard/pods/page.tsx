@@ -1,8 +1,8 @@
 'use client';
-import { PodCard } from '@/src/app/ui/PodCard';
+import { PodCard } from '../../ui/PodCard';
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { PodItem } from '@/types/types';
+import { PodItem } from '../../../../types/types';
 
 type PodByCategory = Record<string, PodItem[]>;
 
@@ -71,7 +71,7 @@ export default function Page() {
       />
     </svg>
   );
-//function to categorize pods by their namespace
+  //function to categorize pods by their namespace
   const categorizePodsByNamespace = (pods: PodItem[]) => {
     //grouping pods based on their namespaces
     const categorizedPods: PodByCategory = {};
@@ -88,11 +88,14 @@ export default function Page() {
   };
 
   //state to track which namesapce is currently open
-  const [openNamespace, setOpenNamespace] = useState('');
+  const [openNamespaces, setOpenNamespaces] = useState({});
 
   //function to toggle the open state of a namespace
-  const toggleNamespace = (namespace: string) => {
-    setOpenNamespace(openNamespace === namespace ? '' : namespace);
+  const toggleNamespace = (namespace) => {
+    setOpenNamespaces((prevOpenNamespaces) => ({
+      ...prevOpenNamespaces,
+      [namespace]: !prevOpenNamespaces[namespace],
+    }));
   };
 
   //function to render the namespaces with their respective pods
@@ -105,12 +108,12 @@ export default function Page() {
           className='flex items-center'
         >
           <span>{namespace}</span>
-          {openNamespace === namespace ? <CloseIcon /> : <OpenIcon />}
+          {openNamespaces[namespace] ? <CloseIcon /> : <OpenIcon />}
         </button>
-        {openNamespace === namespace && (
+        {openNamespaces[namespace] && (
           <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
             {categorizedPods[namespace].map((pod) => (
-              <PodCard pod={pod} handleClick={handleClick} />
+              <PodCard key={pod.name} pod={pod} handleClick={handleClick} />
             ))}
           </div>
         )}

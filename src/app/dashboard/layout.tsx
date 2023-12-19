@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Sidebar from "@/src/app/ui/sidebar";
+import Sidebar from "../ui/sidebar";
 import Banner from "../components/Banner";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
