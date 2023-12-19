@@ -26,17 +26,21 @@ type ElementsType = Cytoscape.ElementDefinition[];
 
 export default function GraphVis() {
 
+  // Store a ref to the Cytoscape graph
   let myCyRef = useRef<(cytoscape.Core | null)>(null);
-  const [elements, setElements] = useState<ElementsType>([]);
-  let didSetData = false;
 
+  // Store Cytoscape elements
+  const [elements, setElements] = useState<ElementsType>([]);
+
+  // Function fetch data from backend and build graph.
+  // Called in useEffect().
   const buildGraph = async () => {
     try {
+      // Fetch data.
       const response = await fetch('/api/graph', { cache: 'no-store' });
       const data:KubeGraphData = await response.json();
-      console.log('Server response: ', data)
 
-      // Build list of graph elements.
+      // Build list of namespaces.
       const newElements:ElementsType = []
       const namespaces = new Map<string,number>();
       function getNamespaceId(ns: string) {
@@ -46,8 +50,10 @@ export default function GraphVis() {
         return namespaces.get(ns)!;
       }
 
+      // Helper function used to build graph nodes.
       function cy_node_def(id: string, label: string, classes: string[]): Cytoscape.ElementDefinition {
-        // Add a blank container for React.createPortal to render into
+        // Create a div for each element using cytoscape-dom-node.
+        // createPortal() will render the contents of these nodes.
         let node_container = document.createElement("div");
         return {
           'data': { id, label, 'dom': node_container, },
@@ -58,7 +64,7 @@ export default function GraphVis() {
 
 
 
-      // Add each node.
+      // Add each Kubernetes node as a Cytoscape graph node.
       data.nodeList.forEach(node => {
         let nodeName = node.metadata!.name!;
         let namespaceId = getNamespaceId(node.metadata!.namespace!);
@@ -67,37 +73,36 @@ export default function GraphVis() {
       })
 
 
+      // Add each Kubernetes pod.
       data.pods.forEach(pod => {
         const podName = pod.metadata!.name!;
         const containerName = pod.spec!.containers[0].name!;
         const nodeName = pod.spec!.nodeName!;
         let namespaceId = getNamespaceId(pod.metadata!.namespace!);
         const newNodeDef = cy_node_def(podName, containerName, ['pod', `namespace${namespaceId}`]);
-        console.log('Adding pod: ', pod);
         newElements.push(newNodeDef);
+        // Attach an edge from each pod to the node it's running on.
         newElements.push( { data: { source: nodeName, target: podName, } })
       })
 
+      setElements( newElements )
 
-
-      if (!didSetData) {
-        setElements( newElements )
-        didSetData = true;
-      }
     }
     catch (err) {
       console.log(`Failed to construct graph: ${err}`);
     }
   };
 
-  useEffect( () => { buildGraph() }, [])
+  // Fetch initial data on load.
+  useEffect( () => { if (elements.length === 0) buildGraph(); }, [])
+
+  // Run layout algorithm after graph is populated.
   useEffect( () => {
-      console.log('Doing layout!')
       const cyGraph = myCyRef!;
       const layout = cyGraph.current!.elements().layout(layoutOptions);
       layout.run();
       console.log('Elements: ', cyGraph.current!.elements())
-     }, [elements])
+    }, [elements])
 
 
 
@@ -111,9 +116,9 @@ export default function GraphVis() {
       key={uuidv4()}
       layout={ layoutOptions }
       cy={cy => {
-        // Grab ref to cytoscape.Core Graph API
         // Install domNode extension
         cy.domNode();
+        // Grab ref to cytoscape.Core Graph API
         myCyRef.current = cy
         // Add context menu
         // let menu = cyGraph.cxtmenu( defaults );
