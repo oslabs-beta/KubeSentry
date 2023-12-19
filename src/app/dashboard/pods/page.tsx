@@ -11,14 +11,14 @@ export default function Page() {
   const [pods, setPods] = useState([]); //array of pod objects.
   /*******************************HELPER FUNCTION**************************************** */
   const fetchData = async () => {
-    const response = await fetch('http://localhost:3000/podapi');
+    const response = await fetch('/podapi');
     const data = await response.json();
     setPods(data['pods']);
   };
   //handle click function to be passed to the pod cards to delete
   const handleClick = async (name: string, namespace: string) => {
     //send a delete request to the next.js endpoint
-    await fetch('http://localhost:3000/podapi', {
+    await fetch('/podapi', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: name, namespace: namespace }),
