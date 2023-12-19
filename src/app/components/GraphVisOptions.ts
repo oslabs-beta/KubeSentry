@@ -16,6 +16,13 @@ export const graphCytoStyle: Stylesheet[] = [
       }
     },
     {
+      selector: 'node:parent',
+      css: {
+        opacity: .333,
+        'background-opacity': 0.333
+      }
+    },
+    {
       selector: '.kNode',
       style: {
         width: 10,

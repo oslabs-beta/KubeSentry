@@ -52,7 +52,7 @@ export default function GraphVis() {
         return namespaces.get(ns);
       }
 
-      // Add namespaces. Assume there's at least one pod in each NS.
+      // Build list of namespaces. Assume there's at least one pod in each NS.
       data.pods.forEach(pod => getNamespaceId(pod.metadata!.namespace!));
 
 
@@ -83,10 +83,15 @@ export default function GraphVis() {
       // Assume only one node for now, one node per namespace
       const clusterNodeId = newElements[0].data.id;
       for (const [namespace, id] of namespaces.entries()) {
-        const newNodeDef = cy_node_def(namespace, namespace, ['kNode', `namespace${id}`]);
-        newElements.push(newNodeDef);
-        // Attach an edge from each pod to the node it's running on.
-        newElements.push( { data: { source: clusterNodeId, target: namespace } })
+        newElements.push( {
+          'data': { id: namespace, label: namespace },
+          classes: ['namespace', `namespace${id}`],
+        })
+
+        // const newNodeDef = cy_node_def(namespace, namespace, ['kNode', `namespace${id}`]);
+        // newElements.push(newNodeDef)
+        // newElements.push( { data: { source: namespace + "_parent", target: namespace } })
+
       }
 
 
@@ -96,11 +101,13 @@ export default function GraphVis() {
         const podName = pod.metadata!.name!;
         const containerName = pod.spec!.containers[0].name!;
         const nodeName = pod.spec!.nodeName!;
-        let namespaceId = getNamespaceId(pod.metadata!.namespace!);
+        const namespace = pod.metadata!.namespace!;
+        let namespaceId = getNamespaceId(namespace);
         const newNodeDef = cy_node_def(podName, containerName, ['pod', `namespace${namespaceId}`]);
+        newNodeDef.data.parent = namespace;
         newElements.push(newNodeDef);
         // Attach an edge from each pod to the node it's running on.
-        newElements.push( { data: { source: pod.metadata!.namespace!, target: podName, } })
+        newElements.push( { data: { source: nodeName, target: podName, } })
       })
 
       setElements( newElements )
