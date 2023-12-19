@@ -24,7 +24,7 @@ export const graphCytoStyle: Stylesheet[] = [
       }
     },
     {
-      selector: '.kNode',
+      selector: '.node',
       style: {
         width: 10,
         height: 10,

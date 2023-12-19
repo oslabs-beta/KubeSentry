@@ -15,6 +15,7 @@ import '../styles/graph.css';
 
 // Styling options
 import { layoutOptions, graphCssStyle, graphCytoStyle } from './GraphVisOptions';
+import { on } from 'events';
 Cytoscape.use(cytoscapeCoseBilkent);
 Cytoscape.use(require('cytoscape-dom-node'));
 
@@ -34,13 +35,25 @@ export default function GraphVis() {
   // Store Cytoscape elements
   const [elements, setElements] = useState<ElementsType>([]);
 
+  const [storeInterval, setStoreInterval] = useState<ReturnType<typeof setInterval>>();
+
+
   // Function fetch data from backend and build graph.
   // Called in useEffect().
   const buildGraph = async () => {
     try {
-      // Fetch data.
+
+      /* Fetch data from remote */
       const response = await fetch('/api/graph', { cache: 'no-store' });
       const data:KubeGraphData = await response.json();
+
+      /* Load stored data */
+      let storedElementString = window.localStorage.getItem("CytoGraphElements");
+      let storedElements: any = storedElementString ? JSON.parse( storedElementString ) : {};
+      const storedNodes: Cytoscape.NodeDataDefinition[] = storedElements?.elements?.nodes || [];
+      const id_to_pos: Record<string, Cytoscape.Position> = {};
+      storedNodes.forEach(node => id_to_pos[node.data.id] = node.position!);
+      console.log(id_to_pos);
 
       // Build list of namespaces.
       const newElements:ElementsType = []
@@ -64,10 +77,11 @@ export default function GraphVis() {
           console.trace(`Unknown ID: ${id} ${label} ${classes}`)
         }
         let node_container = document.createElement("div");
+        const position = (id in id_to_pos) ? id_to_pos[id] : { x: 100, y: 100 };
         return {
           'data': { id, label, 'dom': node_container, },
           classes,
-          'renderedPosition': { x: 100, y: 100 }
+          position
         };
       }
 
@@ -77,7 +91,7 @@ export default function GraphVis() {
       data.nodeList.forEach(node => {
         let nodeName = node.metadata!.name!;
         let namespaceId = getNamespaceId(node.metadata!.namespace!);
-        const newNodeDef = cy_node_def(nodeName, nodeName, ['kNode', `namespace${namespaceId}`]);
+        const newNodeDef = cy_node_def(nodeName, nodeName, ['node', `namespace${namespaceId}`]);
         newElements.push(newNodeDef);
       })
 
@@ -103,7 +117,6 @@ export default function GraphVis() {
 
         // Edge from node to namespace center item
         newElements.push( { data: { source: clusterNodeId, target: namespace }, classes:'node_to_ns' })
-
       }
 
 
@@ -123,7 +136,16 @@ export default function GraphVis() {
         newElements.push( { data: { source: namespace, target: podName } , classes: 'ns_to_pod'})
       })
 
-      setElements( newElements )
+      setElements(newElements);
+      setStoreInterval(interval => {
+        if (interval) {
+          clearInterval(interval);
+        }
+        return setInterval(() => {
+        console.log('Storing elements')
+        window.localStorage.setItem("CytoGraphElements", JSON.stringify( myCyRef.current!.json() ));
+        }, 5000)
+      });
 
     }
     catch (err) {
@@ -132,13 +154,17 @@ export default function GraphVis() {
   };
 
   // Fetch initial data on load.
-  useEffect( () => { if (elements.length === 0) buildGraph(); }, [])
+  useEffect( () => {
+    if (elements.length === 0) {
+      buildGraph();
+    };
+  }, [])
 
   // Run layout algorithm after graph is populated.
   useEffect( () => {
       const cyGraph = myCyRef!;
       const layout = cyGraph.current!.elements().layout(layoutOptions);
-      layout.run();
+      // layout.run();
       console.log('Elements: ', cyGraph.current!.elements())
     }, [elements])
 
@@ -152,7 +178,7 @@ export default function GraphVis() {
       style={ graphCssStyle }
       stylesheet={ graphCytoStyle }
       key={uuidv4()}
-      layout={ layoutOptions }
+      // layout={ layoutOptions }
       cy={cy => {
         // Install domNode extension
         cy.domNode();
@@ -167,10 +193,13 @@ export default function GraphVis() {
       .filter(el => el.data.dom)
       .map(el => {
         return createPortal(
-          <div className={'cy-node w-fit flex flex-col border hover:border-2 p-0.5' + ` ${el.data.id} ` + (el.classes! as string[]).join(' ')}>
+          <div className={'cy-node w-fit flex flex-col border hover:border-2' + ` ${el.data.id} ` + (el.classes! as string[]).join(' ')}>
             <div className="flex flex-row items-center whitespace-nowrap p-0.5">
               <div>{el.data.label}</div>
               <div className='statusDot' />
+            </div>
+            <div className='lowerBorder'>
+              <div>{el.classes![0]}</div>
             </div>
           </div>, el.data.dom);
       })
