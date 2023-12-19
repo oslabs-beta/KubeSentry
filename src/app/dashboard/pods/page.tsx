@@ -2,6 +2,9 @@
 import { PodCard } from '@/src/app/ui/PodCard';
 import React from 'react';
 import { useState, useEffect } from 'react';
+import { PodItem } from '@/types/types';
+
+type PodByCategory = Record<string, PodItem[]>;
 
 export default function Page() {
   /*******************************USE STATE**************************************** */
@@ -13,7 +16,7 @@ export default function Page() {
     setPods(data['pods']);
   };
   //handle click function to be passed to the pod cards to delete
-  const handleClick = async (name, namespace) => {
+  const handleClick = async (name: string, namespace: string) => {
     //send a delete request to the next.js endpoint
     await fetch('http://localhost:3000/podapi', {
       method: 'DELETE',
@@ -37,7 +40,7 @@ export default function Page() {
       clearInterval(intervalId);
     };
   }, []);
-  //open icon for namespaces 
+  //open icon for namespaces
   const OpenIcon = () => (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -53,7 +56,7 @@ export default function Page() {
     </svg>
   );
 
-  //close icon for namespaces 
+  //close icon for namespaces
   const CloseIcon = () => (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -69,29 +72,32 @@ export default function Page() {
     </svg>
   );
 //function to categorize pods by their namespace
-  const categorizePodsByNamespace = (pods) => {
-    //grouping pods based on their namespaces 
-    return pods.reduce((acc, pod) => {
+  const categorizePodsByNamespace = (pods: PodItem[]) => {
+    //grouping pods based on their namespaces
+    const categorizedPods: PodByCategory = {};
+
+    for (const pod of pods) {
       const namespace = pod.namespace;
-      if (!acc[namespace]) {
-        acc[namespace] = [];
+      if (!categorizedPods[namespace]) {
+        categorizedPods[namespace] = [];
       }
-      acc[namespace].push(pod);
-      return acc;
-    }, {});
+      categorizedPods[namespace].push(pod);
+    }
+
+    return categorizedPods;
   };
 
-  //state to track which namesapce is currently open 
-  const [openNamespace, setOpenNamespace] = useState(null);
+  //state to track which namesapce is currently open
+  const [openNamespace, setOpenNamespace] = useState('');
 
-  //function to toggle the open state of a namespace 
-  const toggleNamespace = (namespace) => {
-    setOpenNamespace(openNamespace === namespace ? null : namespace);
+  //function to toggle the open state of a namespace
+  const toggleNamespace = (namespace: string) => {
+    setOpenNamespace(openNamespace === namespace ? '' : namespace);
   };
 
-  //function to render the namespaces with their respective pods 
-  const renderNamespacesWithPods = (categorizedPods) => {
-    //mapping through each namespace and rendering them with their pods. 
+  //function to render the namespaces with their respective pods
+  const renderNamespacesWithPods = (categorizedPods: PodByCategory) => {
+    //mapping through each namespace and rendering them with their pods.
     return Object.keys(categorizedPods).map((namespace) => (
       <div key={namespace}>
         <button
@@ -111,8 +117,8 @@ export default function Page() {
       </div>
     ));
   };
-  
-  //invoking logic to categorize pods by their namesapces 
+
+  //invoking logic to categorize pods by their namesapces
   const categorizedPods = categorizePodsByNamespace(pods);
 
   return (
