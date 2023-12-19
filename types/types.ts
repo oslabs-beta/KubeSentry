@@ -13,6 +13,6 @@ export interface PodItem {
   startTime: any;
 }
 
-type PromMetricsData = any;
-type KubeMetricsstatus = any;
-type KubePodsStatus = any;
+export type PromMetricsData = any;
+export type KubeMetricsstatus = any;
+export type KubePodsStatus = any;
