@@ -11,10 +11,14 @@ import {
   getServices,
   getDeployments,
   deletePod,
+  podEvents,
+  kubeLogs,
 } from '../Controllers/kubeMetrics';
 import { getPrometheusMetrics } from '../Controllers/promMetrics';
 import { KubeGraphData } from '../../types/types'
 
+import { getCustomCounter } from '../Controllers/promMetrics';
+import { getAlertLogs, addAlertLogs } from '../Controllers/logsController';
 /**********************ROUTE ACTIONS**************** */
 //time series query : http://localhost:31302/api/v1/query_range?query=&start=&end=&step
 //job query: query?query={job=''}
@@ -23,6 +27,12 @@ import { KubeGraphData } from '../../types/types'
 router.get('/prom',
   getPrometheusMetrics,
   (_, res: Response) => {
+  res.status(200).json(res.locals.counterData);
+});
+
+// MIGHT HAVE TO REFRESH A FEW TIMES TO GET DATA. IT WORKS I SWEAR!!!
+// prometheus data for our webapp(for now)
+router.get('/prom', getCustomCounter, (_, res: Response) => {
   res.status(200).json(res.locals.counterData);
 });
 
@@ -63,5 +73,19 @@ router.get('/delete/:namespace/:name', deletePod, (req, res) => {
   res.status(200).json(res.locals.deletedpod);
 });
 
+//get a pods logs and events
+router.get('/getEvents/:namespace/:name', podEvents, kubeLogs, (req, res) => {
+  res
+    .status(200)
+    .json({ events: res.locals.podEvents, logs: res.locals.podLogs.body });
+});
+
+router.get('/alertlogs', getAlertLogs, (req, res) => {
+  res.status(200).json(res.locals.alerts);
+});
+
+router.post('/alertlogs', addAlertLogs, (req, res) => {
+  res.status(200).json(res.locals.alerts);
+});
 /**********************EXPORT ROUTER**************** */
 export default router;
