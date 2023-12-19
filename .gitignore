@@ -2,6 +2,8 @@
 .env
 .next
 
+*.png~
+
 build/
 node_modules/
 venv/

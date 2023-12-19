@@ -160,15 +160,7 @@ export default function SideBar() {
             href='/dashboard/graph'
             className='flex h-12 grow items-center justify-center gap-2 rounded-md bg-secondaryDark p-3 text-sm font-medium hover:bg-thirdDark hover:text-white md:flex-none md:justify-start md:p-2 md:px-3'
           >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              x='0px'
-              y='0px'
-              width='22'
-              height='22'
-              viewBox='0 0 50 50'
-            >
-            </svg>
+            <img src='/node-relationship.png' width='22' height='22' />
             <p>Graph View</p>
           </Link>
         </div>

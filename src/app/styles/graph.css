@@ -20,8 +20,13 @@
   background-color: rgba(192, 192, 192, 0.2);
   border-radius: 0 0 10px 10px;
   color: rgb(233, 233, 233);
-  margin: 2px;
+  padding: 2px;
   font-style:italic;
+}
+
+.lowerBorder div {
+  padding: 2px;
+  margin: 2px;
 }
 
 .namespace1 {

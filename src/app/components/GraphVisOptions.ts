@@ -52,11 +52,13 @@ export const graphCytoStyle: Stylesheet[] = [
     }
 ]
 
-export const graphCssStyle =  {
+export const graphCssStyle: React.CSSProperties =  {
   width: '100%',
   height: '100%',
   'color': 'white',
-  'backgroundColor': '#222222',
+  'backgroundColor': '#DDD',
+  'backgroundImage': "url('/graph_background.png')",
+  'backgroundSize': "25px 25px",
   'borderRadius': '10px'
 }
 
