@@ -47,10 +47,11 @@
 
 .tooltip {
   position: fixed; /* Use fixed to position relative to the viewport */
-  background-color: black;
+  background-color: rgb(24, 24, 24);
   color: white;
   padding: 5px;
   border-radius: 5px;
+  opacity: 0.8;
   white-space: nowrap; /* Prevents the tooltip from breaking into multiple lines */
   pointer-events: none; /* Prevents the tooltip from blocking cursor events */
 }
