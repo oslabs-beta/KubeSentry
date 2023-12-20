@@ -1,32 +1,48 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
 import { RequestHandler } from 'express';
+import { runPromQuery, buildDateString } from '../Models/prometheusModel'
 
-//time series query : http://localhost:31302/api/v1/query_range?query=&start=&end=&step
-//job query: query?query={job=''}
-//{metrics: '' , values[[time,counter],[]....]}
+const defaultRange = buildDateString();
+
 export const getCustomCounter: RequestHandler = async (_, res, next) => {
   try {
-    //interval of data
-    let step = '10s';
-    //current time
-    let end = new Date();
-    //range of query (mintues) :1min * 1000ms/s * 60s/min
-    let start = new Date();
-    start.setMinutes(end.getMinutes() - 10);
-    //range query string to append to base prom fetch
-    let queryString = `&start=${start.toISOString()}&end=${end.toISOString()}&step=${step}`;
-    //fetch prometheus
-    const data = await fetch(
-      `http://localhost:${process.env.PROMETHEUS_PORT}/api/v1/query_range?query=my_custom_counter${queryString}`
-    );
-    const result = await data.json(); // TODO: Type
-    //set response data object
+
+    const counter_result = await(runPromQuery('my_custom_counter', defaultRange))
+
     res.locals.counterData = {
-      metrics: result.data.result[0].metric.__name__,
-      value: result.data.result[0].values,
+      metric: counter_result.data.result[0].metric.__name__,
+      values: counter_result.data.result[0].values,
     };
     //go to next middleware
+    return next();
+  } catch (err) {
+    //route to global error
+    return next({
+      log: `error in promQuery. Error: ${err}`,
+      status: 400,
+      message: { err: 'could not get prom data' },
+    });
+  }
+};
+
+// Executes the Prometheus query contained in req.query.query.
+// Stores the result to res.locals.counterData.
+export const getPrometheusMetrics: RequestHandler = async (req, res, next) => {
+
+  console.log("Getting Prometheus Metrics.");
+
+  try {
+    if (typeof req.query.query != 'string') {
+      throw new Error("Unknown value for 'query'")
+    }
+    console.log(`Running PromQuery: ${req.query.query}  ${defaultRange}`);
+    const result = await runPromQuery(req.query.query, defaultRange);
+    res.locals.counterData = {
+      metric: result.data.result[0].metric.__name__,
+      values: result.data.result[0].values,
+    };
+    // TODO: check whether we got something usable and fail gracefully
+
+    // go to next middleware
     return next();
   } catch (err) {
     //route to global error
@@ -36,4 +52,4 @@ export const getCustomCounter: RequestHandler = async (_, res, next) => {
       message: { err: 'could not get prom data' },
     });
   }
-};
+}

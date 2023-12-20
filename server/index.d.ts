@@ -4,7 +4,8 @@ import {
   PodMetricsList,
   NodeMetricsList,
 } from '@kubernetes/client-node';
-import { PodItem, NodeMemValue } from './types/server-types';
+import { PodItem, NodeMemValue, PrometheusDataItem } from './types/server-types';
+import { PromMetricsData } from '../types/types';
 
 declare global {
   namespace Express {
@@ -18,14 +19,9 @@ declare global {
       topNodes: NodeStatus[];
       podMetrics: PodMetricsList;
       nodeMetrics: NodeMetricsList;
-      counterData: { metrics: any; value: any };
+      prometheusData: PrometheusBackendResponse,
+      counterData: PromMetricsData;
       nodeMem: { [key: string]: NodeMemValue };
     }
   }
 }
-
-declare module s {
-  type SecretServerType = { length: number };
-}
-
-export = s;

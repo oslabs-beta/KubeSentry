@@ -2,26 +2,15 @@ require('dotenv').config();
 import { RequestHandler } from 'express';
 import { PodStatusCount } from '../types/server-types';
 import { PodItem } from '../../types/types';
+import { k8sApi, metricsClient } from '../Models/k8sModel';
 
 import {
-  KubeConfig,
-  CoreV1Api,
-  Metrics,
-  topNodes,
-  topPods,
   NodeMetric,
   V1Pod,
   NodeStatus,
+  topNodes,
+  topPods,
 } from '@kubernetes/client-node';
-
-//creates a Kubernetes cluster object
-const kc = new KubeConfig();
-//loads the authentication data to our kubernetes object of our current cluster so it can talk to kube-apiserver
-kc.loadFromDefault();
-//creates a kubernetes api client with our auth data. : This is what is doing the talking to the Kube-Apiserer.
-const k8sApi = kc.makeApiClient(CoreV1Api);
-//mertics-server
-const metricsClient = new Metrics(kc);
 
 //get the node metrics
 export const getNodeMetrics: RequestHandler = async (_, res, next) => {
@@ -41,7 +30,7 @@ export const getNodeMetrics: RequestHandler = async (_, res, next) => {
 
 //{name:{memused: , capacity: , percentage: } , name2:{...},...}
 export const getNodeMem: RequestHandler = async (_, res, next) => {
-  //get the memory used for each node: [['name', 'mem(in Kb)'],...]
+  // get the memory used for each node: [['name', 'mem(in Kb)'],...]
   // console.log(res.locals.nodeMetrics.items);
   const memUsed: [string, number][] = res.locals.nodeMetrics.items.map(
     (el: NodeMetric) => [
@@ -73,7 +62,7 @@ export const getNodeMem: RequestHandler = async (_, res, next) => {
 export const getPods: RequestHandler = async (_, res, next) => {
   try {
     //get all the pods from our cluster
-    const podsRes = await k8sApi.listPodForAllNamespaces();
+    const podsRes = await k8sApi.listPodForAllNamespaces()
     //ARRAY OF ['namespace', 'pod-name', 'status]
     const resPods: PodItem[] = [];
     const statusCount: PodStatusCount = {};
@@ -149,10 +138,10 @@ export const deletePod: RequestHandler = async (req, res, next) => {
       undefined,
       2
     );
-    //move to next middleware
+    // move to next middleware
     return next();
   } catch (err) {
-    //route to global error handler
+    // route to global error handler
     return next({
       log: 'could not get pod Metrics from middleware',
       status: 400,
