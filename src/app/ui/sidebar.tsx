@@ -3,7 +3,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-
 const sideBar = () => {
   const appName = 'Kube Sentry';
 
@@ -168,7 +167,7 @@ const sideBar = () => {
         <div>
           <Link
             href='/dashboard/alert'
-            className='flex h-12 grow items-center justify-center gap-2 rounded-md bg-secondaryDark p-3 text-sm font-medium hover:bg-thirdDark hover:text-white md:flex-none md:justify-start '
+            className='flex h-12 grow items-center justify-center gap-2 rounded-md bg-secondaryDark p-3 text-sm font-medium hover:bg-thirdDark hover:text-white md:flex-none md:justify-start md:p-2 md:px-3 '
           >
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -211,11 +210,3 @@ const sideBar = () => {
 };
 
 export default sideBar;
-
-// return (
-//   <div>
-//     <Link href='/dashboard'>Dashboard</Link>
-//     <Link href='/dashboard'>Graphs</Link>
-//     <Link href='/dasbhoard'>Settings</Link>
-//   </div>
-// );
