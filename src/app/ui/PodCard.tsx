@@ -30,7 +30,7 @@ export function PodCard(props: { pod: PodItem; handleClick: Function }) {
   };
 
   return (
-    <article className="relative flex flex-col justify-between h-64 rounded-3xl overflow-hidden shadow-lg border-solid bg-secondaryDark shadow-lg ">
+    <article className="relative flex flex-col justify-between h-56 rounded-3xl overflow-hidden shadow-lg border-solid bg-secondaryDark shadow-lg ">
       {/* trash can icon for deleting the pod  */}
       <button
         onClick={() => handleClick(name, namespace)}
@@ -55,8 +55,8 @@ export function PodCard(props: { pod: PodItem; handleClick: Function }) {
         <div className="font-bold text-base mb-2 text-center text-slate-100">
           {name}
         </div>
-        <p className="text-gray-700 text-sm text-center">{namespace}</p>
-        <p className="text-gray-700 text-sm text-center text-green-600">
+        <p className="text-gray-500 text-sm text-center">{namespace}</p>
+        <p className="text-sm text-center text-green-600">
           {status}
         </p>
       </div>

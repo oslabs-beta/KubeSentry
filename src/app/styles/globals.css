@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 yt {
-  color: gold;
+  color: rgb(216, 180, 1);
 }
 
 body {
@@ -15,7 +15,7 @@ body {
   --background-end-rgb: 255, 255, 255;
 } */
 
-/* 
+/*
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
