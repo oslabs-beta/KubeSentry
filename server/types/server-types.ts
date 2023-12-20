@@ -15,7 +15,7 @@ export interface NodeMemValue {
 }
 
 // https://prometheus.io/docs/prometheus/latest/querying/api/
-import { PrometheusDataItem } from "@/types/types";
+import { PrometheusDataItem } from "../../types/types";
 
 type PrometheusRangeVector = {
   metric: Record<string, string>,

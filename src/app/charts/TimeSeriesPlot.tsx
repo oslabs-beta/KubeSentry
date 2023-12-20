@@ -106,9 +106,9 @@ type timedata = {
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
       },
-      
+
     ],
-    
+
   };
 
   return <Line data={dataSet} ref={chartRef} options={options} />;
@@ -128,16 +128,16 @@ export default function TimeSeriesPlot(params: TimeSeriesParams) {
       const { values } = jsondata;
       //only update if we get something back from prometheus
       //do this way to not mutate the state
-      const timeCopy = [...time];
-      const counterCopy = [...counter];
+      const newTime: Date[] = [];
+      const newCounter: number[] = [];
       if (values) {
         values.forEach((el: [number, string]) => {
-          timeCopy.push(new Date(el[0] * 1000));
-          counterCopy.push(Number(el[1]));
+          newTime.push(new Date(el[0] * 1000));
+          newCounter.push(Number(el[1]));
         });
         console.log('Got values: ', values)
-        setTime(timeCopy);
-        setCounter(counterCopy);
+        setTime(newTime);
+        setCounter(newCounter);
       }
     }, 5000);
     //cleanup code

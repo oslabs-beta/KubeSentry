@@ -5,6 +5,7 @@ import {
   NodeMetricsList,
 } from '@kubernetes/client-node';
 import { PodItem, NodeMemValue, PrometheusDataItem } from './types/server-types';
+import { PromMetricsData } from '../types/types';
 
 declare global {
   namespace Express {
@@ -19,7 +20,7 @@ declare global {
       podMetrics: PodMetricsList;
       nodeMetrics: NodeMetricsList;
       prometheusData: PrometheusBackendResponse,
-      counterData: { metrics: any; value: any };
+      counterData: PromMetricsData;
       nodeMem: { [key: string]: NodeMemValue };
     }
   }

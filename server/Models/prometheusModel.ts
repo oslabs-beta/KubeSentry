@@ -28,9 +28,15 @@ export function buildDateString(range=60, step=60): string {
 // @params {dateString}: start, end, step query parameters (string)
 // @returns PrometheusResponse
 export async function runPromQuery(query: string, dateString: string) {
+
+  console.log("runPromQuery start")
+
   const promQuery = `${PROM_HOST}/query_range?query=${query}&${dateString}`;
   // console.log(`Query: ${promQuery}`)
-  const data = await fetch( promQuery );
-  const result: PrometheusResponse = await data.json();
+  const response = await fetch( promQuery );
+  console.log("Response: ", response)
+  // const result: PrometheusResponse = await data.json();
+  const result: any = await response.json();
+  console.log("promQuery result: ", result);
   return result;
 }

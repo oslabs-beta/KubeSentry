@@ -2,7 +2,7 @@ require('dotenv').config();
 import { RequestHandler } from 'express';
 import { PodStatusCount } from '../types/server-types';
 import { PodItem } from '../../types/types';
-import { k8sApi, metricsClient } from '@/Models/k8sModel';
+import { k8sApi, metricsClient } from '../Models/k8sModel';
 
 import {
   NodeMetric,
