@@ -46,13 +46,11 @@
 }
 
 .tooltip {
-  position: absolute;
+  position: fixed; /* Use fixed to position relative to the viewport */
   background-color: black;
   color: white;
   padding: 5px;
   border-radius: 5px;
-  /* Adjust these to control the position of the tooltip */
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
+  white-space: nowrap; /* Prevents the tooltip from breaking into multiple lines */
+  pointer-events: none; /* Prevents the tooltip from blocking cursor events */
 }
