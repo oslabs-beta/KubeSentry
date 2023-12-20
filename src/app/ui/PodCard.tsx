@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Modal from './PodModal';
 import { PodItem } from '../../../types/types';
 
+
 //Each individual PodCard component which accepts Poditem and a handleClick function as props
 export function PodCard(props: { pod: PodItem; handleClick: Function }) {
   //destructuring props

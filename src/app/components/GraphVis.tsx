@@ -79,7 +79,7 @@ export default function GraphVis() {
         let node_container = document.createElement("div");
         const position = (id in id_to_pos) ? id_to_pos[id] : { x: 100, y: 100 };
         return {
-          'data': { id, label, 'dom': node_container, },
+          'data': { id, label, 'dom': node_container },
           classes,
           position
         };
@@ -92,6 +92,7 @@ export default function GraphVis() {
         let nodeName = node.metadata!.name!;
         let namespaceId = getNamespaceId(node.metadata!.namespace!);
         const newNodeDef = cy_node_def(nodeName, nodeName, ['node', `namespace${namespaceId}`]);
+        newNodeDef.data.info = node;
         newElements.push(newNodeDef);
       })
 
@@ -116,7 +117,11 @@ export default function GraphVis() {
         newElements.push( newNodeDef)
 
         // Edge from node to namespace center item
-        newElements.push( { data: { source: clusterNodeId, target: namespace }, classes:'node_to_ns' })
+        newElements.push( { data: {
+          source: clusterNodeId,
+          target: namespace,
+          info: namespace
+        }, classes:'node_to_ns' })
       }
 
 
@@ -130,6 +135,7 @@ export default function GraphVis() {
         let namespaceId = getNamespaceId(namespace);
         const newNodeDef = cy_node_def(podName, containerName, ['pod', `namespace${namespaceId}`]);
         newNodeDef.data.parent = namespace + "_parent";
+        newNodeDef.data.info = pod;
         newElements.push(newNodeDef);
         // Attach an edge from each pod to the node it's running on.
         // const e: Cytoscape.ElementDefinition;
@@ -192,17 +198,28 @@ export default function GraphVis() {
     elements
       .filter(el => el.data.dom)
       .map(el => {
+
+        let innerInfo = <>
+          <div className="flex flex-row items-center whitespace-nowrap p-0.5">
+            <div>{el.data.label}</div>
+            <div className='statusDot' />
+          </div>
+          <div className='lowerBorder'>
+            <div>{el.classes![0]}</div>
+          </div>
+        </>
+
+        if (el.data.info) {
+          innerInfo = (
+            <Tooltip data={el.data.info}>
+              {innerInfo}
+            </Tooltip>
+          )
+        }
+
         return createPortal(
           <div className={'cy-node w-fit flex flex-col border hover:border-2' + ` ${el.data.id} ` + (el.classes! as string[]).join(' ')}>
-            <Tooltip text="This is a tooltip">
-              <div className="flex flex-row items-center whitespace-nowrap p-0.5">
-                <div>{el.data.label}</div>
-                <div className='statusDot' />
-              </div>
-              <div className='lowerBorder'>
-                <div>{el.classes![0]}</div>
-              </div>
-            </Tooltip>
+            {innerInfo}
           </div>, el.data.dom);
       })
     }
