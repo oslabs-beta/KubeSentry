@@ -115,7 +115,7 @@ export default function TimeSeriesPlot() {
 
   useEffect(() => {
     const id = setInterval(async () => {
-      const response = await fetch('http://localhost:3000/charts/api', {
+      const response = await fetch('/charts/api', {
         cache: 'no-store',
       });
       let jsondata: PromMetricsData = await response.json();
