@@ -23,14 +23,13 @@ export default function Page() {
   const style = { width: '50%' };
 
   return (
-    <div className="bg-secondaryDark rounded-md text-white min-h-screen p-8">
+    <div className='bg-secondaryDark rounded-md text-white min-h-screen p-8'>
       <SearchBar
         value={searchQuery}
         onChange={handleSearch}
         onSearch={handleSearchButtonClick}
       />
-      <h1 className="text-3xl font-bold mt-4">Sentry Dashboard</h1>
-      <div className="flex flex-column">
+      <div className='flex flex-column'>
         <div style={style}>
           <TimeSeriesPlot query={'sum(rate(coredns_dns_requests_total[2m]))'} title={'CoreDNS Requests'} />
         </div>
@@ -38,7 +37,7 @@ export default function Page() {
           <TimeSeriesPlot query={'sum(rate(coredns_dns_responses_total[2m]))'} title={'CoreDNS Responses'} />
         </div>
       </div>
-      <div className="flex flow-row justify-center">
+      <div className='flex flow-row justify-center'>
         <div style={style}>
           <PieChart />
         </div>
