@@ -8,6 +8,7 @@ import Cytoscape from 'cytoscape';
 import cytoscapeCoseBilkent from "cytoscape-cose-bilkent";
 import { KubeGraphData } from '../../../types/types';
 import { v4 as uuidv4 } from 'uuid';
+import { Tooltip } from './Tooltip';
 import '../styles/graph.css';
 
 // import cytoscapeCoseBilkent from "cytoscape-cose-bilkent";
@@ -15,7 +16,6 @@ import '../styles/graph.css';
 
 // Styling options
 import { layoutOptions, graphCssStyle, graphCytoStyle } from './GraphVisOptions';
-import { on } from 'events';
 Cytoscape.use(cytoscapeCoseBilkent);
 Cytoscape.use(require('cytoscape-dom-node'));
 
@@ -194,13 +194,15 @@ export default function GraphVis() {
       .map(el => {
         return createPortal(
           <div className={'cy-node w-fit flex flex-col border hover:border-2' + ` ${el.data.id} ` + (el.classes! as string[]).join(' ')}>
-            <div className="flex flex-row items-center whitespace-nowrap p-0.5">
-              <div>{el.data.label}</div>
-              <div className='statusDot' />
-            </div>
-            <div className='lowerBorder'>
-              <div>{el.classes![0]}</div>
-            </div>
+            <Tooltip text="This is a tooltip">
+              <div className="flex flex-row items-center whitespace-nowrap p-0.5">
+                <div>{el.data.label}</div>
+                <div className='statusDot' />
+              </div>
+              <div className='lowerBorder'>
+                <div>{el.classes![0]}</div>
+              </div>
+            </Tooltip>
           </div>, el.data.dom);
       })
     }
