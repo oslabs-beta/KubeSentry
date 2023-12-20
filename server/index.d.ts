@@ -9,6 +9,7 @@ import {
   NodeMemValue,
   PrometheusDataItem,
 } from './types/server-types';
+import { PromMetricsData } from '../types/types';
 
 declare global {
   namespace Express {
@@ -25,7 +26,7 @@ declare global {
       nodeMetrics: NodeMetricsList;
       nodeMem: Record<string, NodeMemValue>,
       prometheusData: PrometheusBackendResponse;
-      counterData: { metrics: any; value: any };
+      counterData: PromMetricsData;
       services: V1ServiceList,
       deployments: V1DeplymentList
     }

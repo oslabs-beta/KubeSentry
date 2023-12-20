@@ -126,7 +126,7 @@ export const getNodeMem: RequestHandler = async (_, res, next) => {
 export const getPods: RequestHandler = async (_, res, next) => {
   try {
     //get all the pods from our cluster
-    const podsRes = await k8sApi.listPodForAllNamespaces();
+    const podsRes = await k8sApi.listPodForAllNamespaces()
     //ARRAY OF ['namespace', 'pod-name', 'status]
     const resPods: PodItem[] = [];
     const statusCount: PodStatusCount = {};

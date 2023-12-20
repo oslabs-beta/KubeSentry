@@ -21,8 +21,9 @@ type PrometheusRangeVector = {
   values: PrometheusDataItem[];
 };
 
+
 interface PrometheusData {
-  resultType: 'matrix' | 'vector' | 'scalar' | 'string';
+  resultType: ("matrix" | "vector" | "scalar" | "string"),
   result: PrometheusRangeVector[];
 }
 
