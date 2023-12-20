@@ -28,13 +28,10 @@ export const getCustomCounter: RequestHandler = async (_, res, next) => {
 // Stores the result to res.locals.counterData.
 export const getPrometheusMetrics: RequestHandler = async (req, res, next) => {
 
-  console.log("Getting Prometheus Metrics.");
-
   try {
     if (typeof req.query.query != 'string') {
       throw new Error("Unknown value for 'query'")
     }
-    console.log(`Running PromQuery: ${req.query.query}  ${defaultRange}`);
     const result = await runPromQuery(req.query.query, defaultRange);
     res.locals.counterData = {
       metric: result.data.result[0].metric.__name__,

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-const sideBar = () => {
+export default function SideBar() {
   const appName = 'Kube Sentry';
 
   return (
@@ -164,6 +164,16 @@ const sideBar = () => {
             <p className='hidden sm:block'>Report</p>
           </Link>
         </div>
+
+        <div>
+          <Link
+            href='/dashboard/graph'
+            className='flex h-12 grow items-center justify-center gap-2 rounded-md bg-secondaryDark p-3 text-sm font-medium hover:bg-thirdDark hover:text-white md:flex-none md:justify-start md:p-2 md:px-3'
+          >
+            <img src='/node-relationship.png' width='22' height='22' />
+            <p>Graph View</p>
+          </Link>
+        </div>
         <div>
           <Link
             href='/dashboard/alert'
@@ -209,4 +219,3 @@ const sideBar = () => {
   );
 };
 
-export default sideBar;

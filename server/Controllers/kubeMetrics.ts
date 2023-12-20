@@ -1,21 +1,39 @@
 require('dotenv').config();
 import { RequestHandler } from 'express';
+
 import { PodStatusCount } from '../types/server-types';
+import { k8sApi, k8sAppsApi, metricsClient, queryTopNodes } from '../Models/k8sModel';
 import { PodItem } from '../../types/types';
-import { k8sApi, metricsClient } from '../Models/k8sModel';
 
 import {
   NodeMetric,
   V1Pod,
   NodeStatus,
-  topNodes,
   topPods,
+  topNodes
 } from '@kubernetes/client-node';
+
+
+export const getNodes: RequestHandler = async (_, res, next) => {
+  try {
+    console.log("Querying topNodes")
+    queryTopNodes();
+    const listNode = await k8sApi.listNode();
+    res.locals.nodeList = listNode.body.items;
+    return next();
+  }
+  catch (err) {
+    return next({
+      log: `error in getNodes: ${err}`,
+      status: 500,
+      message: { err: 'ERROR: unable to get top nodes.' },
+    });
+  }
+};
 
 //get the node metrics
 export const getNodeMetrics: RequestHandler = async (_, res, next) => {
   try {
-    // console.log(kc);
     res.locals.topNodes = await topNodes(k8sApi);
     res.locals.nodeMetrics = await metricsClient.getNodeMetrics();
     return next();
@@ -28,10 +46,57 @@ export const getNodeMetrics: RequestHandler = async (_, res, next) => {
   }
 };
 
+export const getServices: RequestHandler = async (_, res, next) => {
+  try {
+    const services = await k8sApi.listServiceForAllNamespaces();
+    res.locals.services = services.body.items;
+    return next();
+  } catch (err) {
+    return next({
+      log: `error in getServices: ${err}`,
+      message: { err: 'ERROR: unable to list services.' },
+    });
+  }
+};
+
+export const getDeployments: RequestHandler = async (_, res, next) => {
+  try {
+    const deployments = await k8sAppsApi.listDeploymentForAllNamespaces();
+    res.locals.deployments = deployments.body.items;
+    return next();
+  } catch (err) {
+    return next({
+      log: `error in getTopNodes: ${err}`,
+      message: { err: 'ERROR: unable to list deployments.' },
+    });
+  }
+};
+
+export const getKubeGraph: RequestHandler = async (_, res, next) => {
+  // Namespaces?
+  res.locals.nodes = k8sApi.listNode();
+};
+
+
+export const getRawPods: RequestHandler = async (_, res, next) => {
+  try {
+    console.log('Trying to fetch pods.')
+    const pods = await k8sApi.listPodForAllNamespaces();
+    console.log('Got pods : ', pods.body)
+    res.locals.rawPods = pods.body.items;
+    return next();
+  } catch (err) {
+    return next({
+      log: `error in getPodsRaw: ${err}`,
+      message: { err: 'ERROR: unable to list pods.' },
+    });
+  }
+}
+
+
 //{name:{memused: , capacity: , percentage: } , name2:{...},...}
 export const getNodeMem: RequestHandler = async (_, res, next) => {
   // get the memory used for each node: [['name', 'mem(in Kb)'],...]
-  // console.log(res.locals.nodeMetrics.items);
   const memUsed: [string, number][] = res.locals.nodeMetrics.items.map(
     (el: NodeMetric) => [
       //name of node
@@ -40,7 +105,6 @@ export const getNodeMem: RequestHandler = async (_, res, next) => {
       Number(el.usage.memory.slice(0, el.usage.memory.length - 2)),
     ]
   );
-  console.log(memUsed);
   //get the memory capacity of each node (in Mb)
   const memCap = res.locals.topNodes.map((el: NodeStatus) =>
     Number(el.Memory.Capacity)

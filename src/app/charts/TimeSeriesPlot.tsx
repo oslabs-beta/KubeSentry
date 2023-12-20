@@ -4,6 +4,7 @@ import { PromMetricsData } from '../../../types/types';
 import 'chartjs-adapter-date-fns';
 import { useState, useEffect, useRef } from 'react';
 
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -121,7 +122,7 @@ export default function TimeSeriesPlot(params: TimeSeriesParams) {
 
   useEffect(() => {
     const id = setInterval(async() => {
-      const response = await fetch(`/charts/api?query=${params.query}`, {
+      const response = await fetch(`/api/promQuery?query=${params.query}`, {
         cache: 'no-store',
       });
       let jsondata: PromMetricsData = await response.json();

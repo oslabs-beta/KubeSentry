@@ -27,6 +27,7 @@
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.18",
     "@types/supertest": "^2.0.16",
+    "@types/uuid": "^9.0.7",
     "@types/vis": "^4.21.27",
     "autoprefixer": "^10.4.16",
     "babel-jest": "^29.7.0",
@@ -47,14 +48,23 @@
   "dependencies": {
     "@heroicons/react": "^2.0.18",
     "@kubernetes/client-node": "^0.20.0",
+    "@types/cytoscape-cxtmenu": "^3.4.4",
+    "@types/react-cytoscapejs": "^1.2.5",
     "chartjs-adapter-date-fns": "^3.0.0",
+    "cytoscape": "^3.28.0",
+    "cytoscape-cose-bilkent": "^4.1.0",
+    "cytoscape-cxtmenu": "^3.5.0",
+    "cytoscape-dom-node": "^1.2.0",
     "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "next": "^14.0.3",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
+    "react-cytoscapejs": "^2.0.0",
     "react-dom": "^18.2.0",
-    "ts-node": "^10.9.1"
+    "react-graph-vis": "^1.0.7",
+    "ts-node": "^10.9.1",
+    "uuid": "^9.0.1"
   }
 }

@@ -23,20 +23,14 @@ export function buildDateString(range=60, step=60): string {
 
 
 // Send a Prometheus API query using the following URL format:
-// http://localhost:PORT/api/v1/query_range?query={query}&start={}&end={}&step
+// http://url:PORT/api/v1/query_range?query={query}&start={}&end={}&step
 // @params {query}: Prometheus query (string)
 // @params {dateString}: start, end, step query parameters (string)
 // @returns PrometheusResponse
 export async function runPromQuery(query: string, dateString: string) {
-
-  console.log("runPromQuery start")
-
   const promQuery = `${PROM_HOST}/query_range?query=${query}&${dateString}`;
   // console.log(`Query: ${promQuery}`)
-  const response = await fetch( promQuery );
-  console.log("Response: ", response)
-  // const result: PrometheusResponse = await data.json();
-  const result: any = await response.json();
-  console.log("promQuery result: ", result);
+  const data = await fetch( promQuery );
+  const result: PrometheusResponse = await data.json();
   return result;
 }

@@ -1,0 +1,46 @@
+
+.cy-node {
+  background-color: rgb(93, 135, 151);
+  border-radius: 10px;
+  border-radius: 10px;
+  border-color: rgb(20, 20, 20);
+}
+
+.statusDot{
+  height: 10px;
+  width: 10px;
+  background-color: #00c210;
+  border-radius: 50%;
+  margin: 2px;
+  display: inline-block;
+}
+
+.lowerBorder {
+  border-top: 1px solid rgba(64,64,64,0.4);
+  background-color: rgba(192, 192, 192, 0.2);
+  border-radius: 0 0 10px 10px;
+  color: rgb(233, 233, 233);
+  padding: 2px;
+  font-style:italic;
+}
+
+.lowerBorder div {
+  padding: 2px;
+  margin: 2px;
+}
+
+.namespace1 {
+  background-color: #bf4e30;
+}
+.namespace2 {
+  background-color: #766190;
+}
+.namespace3 {
+  background-color: #22577a;
+}
+.namespace4 {
+  background-color: #6a7a5a;
+}
+.namespace5 {
+  background-color: #38a3a5;
+}

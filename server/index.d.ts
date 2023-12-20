@@ -4,7 +4,11 @@ import {
   PodMetricsList,
   NodeMetricsList,
 } from '@kubernetes/client-node';
-import { PodItem, NodeMemValue, PrometheusDataItem } from './types/server-types';
+import {
+  PodItem,
+  NodeMemValue,
+  PrometheusDataItem,
+} from './types/server-types';
 import { PromMetricsData } from '../types/types';
 
 declare global {
@@ -15,13 +19,16 @@ declare global {
         nameSpace: string[];
         statusCount: PodStatusCount;
       };
+      rawPods: V1Pod[],
       topPods: PodStatus[];
       topNodes: NodeStatus[];
       podMetrics: PodMetricsList;
       nodeMetrics: NodeMetricsList;
-      prometheusData: PrometheusBackendResponse,
+      nodeMem: Record<string, NodeMemValue>,
+      prometheusData: PrometheusBackendResponse;
       counterData: PromMetricsData;
-      nodeMem: { [key: string]: NodeMemValue };
+      services: V1ServiceList,
+      deployments: V1DeplymentList
     }
   }
 }
