@@ -88,10 +88,11 @@ export default function Page() {
   };
 
   //state to track which namesapce is currently open
-  const [openNamespaces, setOpenNamespaces] = useState({});
+  // Open `default` namespace by default
+  const [openNamespaces, setOpenNamespaces] = useState<Record<string, boolean>>({default: true});
 
   //function to toggle the open state of a namespace
-  const toggleNamespace = (namespace) => {
+  const toggleNamespace = (namespace: string) => {
     setOpenNamespaces((prevOpenNamespaces) => ({
       ...prevOpenNamespaces,
       [namespace]: !prevOpenNamespaces[namespace],
