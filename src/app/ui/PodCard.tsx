@@ -3,6 +3,13 @@ import React, { useState } from 'react';
 import Modal from './PodModal';
 import { PodItem } from '../../../types/types';
 
+
+const statusColorMap: Record<string,string> = {
+  'Running': "text-green-600",
+  'Pending': "text-red-700"
+}
+
+
 //Each individual PodCard component which accepts Poditem and a handleClick function as props
 export function PodCard(props: { pod: PodItem; handleClick: Function }) {
   //destructuring props
@@ -28,6 +35,8 @@ export function PodCard(props: { pod: PodItem; handleClick: Function }) {
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
+
+  const statusColor = statusColorMap[status] || 'text-red-700';
 
   return (
     <article className="relative flex flex-col justify-between h-56 rounded-3xl overflow-hidden shadow-lg border-solid bg-secondaryDark shadow-lg ">
@@ -56,7 +65,7 @@ export function PodCard(props: { pod: PodItem; handleClick: Function }) {
           {name}
         </div>
         <p className="text-gray-500 text-sm text-center">{namespace}</p>
-        <p className="text-sm text-center text-green-600">
+        <p className={"text-sm text-center " + statusColor}>
           {status}
         </p>
       </div>
