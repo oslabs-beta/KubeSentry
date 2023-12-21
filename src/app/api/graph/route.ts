@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { KubeGraphData } from '@/types/types'
 
 export async function GET() {
-  console.log('Fetching /api/graph/')
+  // console.log('Fetching /api/graph/')
   let res = await fetch('http://localhost:8888/metrics/kubeGraph', {
     next: { revalidate: 30 }
   });

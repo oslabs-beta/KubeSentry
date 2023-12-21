@@ -136,7 +136,7 @@ export default function TimeSeriesPlot(params: TimeSeriesParams) {
           newTime.push(new Date(el[0] * 1000));
           newCounter.push(Number(el[1]));
         });
-        console.log('Got values: ', values)
+        // console.log('Got values: ', values)
         setTime(newTime);
         setCounter(newCounter);
       }

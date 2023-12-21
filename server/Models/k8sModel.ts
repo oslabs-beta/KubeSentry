@@ -18,6 +18,6 @@ export const k8sAppsApi = kc.makeApiClient(AppsV1Api)
 export const metricsClient = new Metrics(kc);
 
 export const queryTopNodes = async () => {
-  console.log('Querying topNodes: ');
-  console.log(await topNodes(k8sApi));
+  // console.log('Querying topNodes: ');
+  return await topNodes(k8sApi)
 }

@@ -16,7 +16,7 @@ import {
 
 export const getNodes: RequestHandler = async (_, res, next) => {
   try {
-    console.log("Querying topNodes")
+    // console.log("Querying topNodes")
     queryTopNodes();
     const listNode = await k8sApi.listNode();
     res.locals.nodeList = listNode.body.items;
@@ -80,9 +80,9 @@ export const getKubeGraph: RequestHandler = async (_, res, next) => {
 
 export const getRawPods: RequestHandler = async (_, res, next) => {
   try {
-    console.log('Trying to fetch pods.')
+    // console.log('Trying to fetch pods.')
     const pods = await k8sApi.listPodForAllNamespaces();
-    console.log('Got pods : ', pods.body)
+    // console.log('Got pods : ', pods.body)
     res.locals.rawPods = pods.body.items;
     return next();
   } catch (err) {

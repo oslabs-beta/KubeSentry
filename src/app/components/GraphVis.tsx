@@ -53,7 +53,6 @@ export default function GraphVis() {
       const storedNodes: Cytoscape.NodeDataDefinition[] = storedElements?.elements?.nodes || [];
       const id_to_pos: Record<string, Cytoscape.Position> = {};
       storedNodes.forEach(node => id_to_pos[node.data.id] = node.position!);
-      console.log(id_to_pos);
 
       // Build list of namespaces.
       const newElements:ElementsType = []
@@ -148,7 +147,6 @@ export default function GraphVis() {
           clearInterval(interval);
         }
         return setInterval(() => {
-        console.log('Storing elements')
         window.localStorage.setItem("CytoGraphElements", JSON.stringify( myCyRef.current!.json() ));
         }, 5000)
       });
@@ -171,7 +169,6 @@ export default function GraphVis() {
       const cyGraph = myCyRef!;
       const layout = cyGraph.current!.elements().layout(layoutOptions);
       // layout.run();
-      console.log('Elements: ', cyGraph.current!.elements())
     }, [elements])
 
 

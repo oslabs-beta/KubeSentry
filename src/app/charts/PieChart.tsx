@@ -30,7 +30,7 @@ export default function PieChart() {
       return jsondata;
     } catch (err) {
       //error catch
-      console.log(err);
+      console.log(`Error: ${err}`);
     }
   }
 
@@ -44,7 +44,7 @@ export default function PieChart() {
     const id = setInterval(() => {
       getPieData().then((data) => {
         if (data) {
-          console.log('Number of pods', data)
+          // console.log('Number of pods', data)
           if (!objCompare(data, piedata)) {
             setPieData(Object.assign({}, data));
           }

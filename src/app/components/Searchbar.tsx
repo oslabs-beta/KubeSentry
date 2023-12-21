@@ -21,7 +21,7 @@ export default function SearchBar({
   return (
     <div className='search-bar-wrapper'>
       <div className='search-bar flex text-black '>
-        <form className='flex w-full p-relative' onSubmit={handleSubmit}>
+        <form className='flex w-1/2 p-relative' onSubmit={handleSubmit}>
           <button type='submit'>
             <svg
               width='35'

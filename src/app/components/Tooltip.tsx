@@ -27,7 +27,6 @@ export const Tooltip = (props: TooltipProps) => {
   };
 
   const handleMouseEnter = () => {
-    console.log(props.data);
     setHoverTimeout(
       setTimeout(() => {
         setIsShown(true);

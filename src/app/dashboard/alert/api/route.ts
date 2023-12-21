@@ -5,7 +5,6 @@ export async function GET(request: Request): Promise<any> {
     cache: 'no-store',
   });
   let data: any = await res.json();
-  console.log('in the server of next');
   return NextResponse.json(data);
 }
 
