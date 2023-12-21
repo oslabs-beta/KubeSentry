@@ -64,8 +64,8 @@ export function PodCard(props: { pod: PodItem; handleClick: Function }) {
         <div className="font-bold text-base mb-2 text-center text-slate-100">
           {name}
         </div>
-        <p className="text-gray-500 text-sm text-center">{namespace}</p>
-        <p className={"text-sm text-center " + statusColor}>
+        <p className="text-gray-500 text-base text-center">{namespace}</p>
+        <p className={"text-base text-center " + statusColor}>
           {status}
         </p>
       </div>
