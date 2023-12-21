@@ -2,29 +2,33 @@
 
 Kubernetes Monitoring Toolkit
 
-clone this repository `git clone`
+Clone this repository, install dependencies and run:
 
-`npm install`
+```
+git clone https://github.com/oslabs-beta/KubeSentry.git
+cd KubeSentry
+npm install
+npm run
+```
 
-`npm run`
 
-access [`localhost:3000\dashboard`](localhost:300\dashboard)
+The Sentry Dashboard will be available at [localhost:3000](http://localhost:3000/dashboard).
 
-# Setting up your kubernetes cluster
+# Setting up your Kubernetes cluster
 
 - Install kubectl. Run `kubectl version` to check if it has been sucessfully downloaded.
 
-- First you need to have your own kubernetes cluster. You can run your own local kubernetes cluster either with [docker-desktop](https://www.docker.com/products/docker-desktop/) or [minikube](https://minikube.sigs.k8s.io/docs/start/)
+- KubeSentry will connect to the Kubernetes cluster configured by `kubectl config current-context`. For testing purposes, you can run a local Kubernetes cluster either with [Docker Desktop](https://www.docker.com/products/docker-desktop/) or [minikube](https://minikube.sigs.k8s.io/docs/start/).
 
-* commands will follow managing your K8 cluster on docker-desktop
-  - To start kubernetes on docker-desktop navigate to the settings page > kubernetes and **Enable Kubernetes**
-  - run `kubectl cluster-config` to make sure your kubernetes cluster is operating
+* The following commands will follow managing your K8s cluster on Docker Desktop.
+  - To start Kubernetes on docker-desktop, navigate to Settings > Kubernetes and **Enable Kubernetes**.
+  - run `kubectl cluster-config` to ensure your Kubernetes cluster is operating.
 
 # Set up metrics server
 
-- [Kubernetes Metrics Server](https://github.com/kubernetes-sigs/metrics-server) is required to get additional information from your k8 cluster
-- Follow instructions on the github repo to install the metrics-server.
-- ** Note the `--kubelet-insecure-tls` flag to bypass the CA authenication for kubelets **
+- [Kubernetes Metrics Server](https://github.com/kubernetes-sigs/metrics-server) is required to get additional information from your K8s cluster.
+- Follow instructions on the Github repo to install the Kubernetes metrics-server.
+- ** Note the `--kubelet-insecure-tls` flag to bypass the CA authenication for kubelets. **
   ```yaml
   spec:
     containers:
@@ -37,24 +41,24 @@ access [`localhost:3000\dashboard`](localhost:300\dashboard)
           - --kubelet-insecure-tls
     image: registry.k8s.io/metrics-server/metrics-server:v0.6.4
   ```
-- If your metrics server is installed correctly you should be able to run `kubectl top pods` or `kubectl top nodes` to get pods and node metrics of your cluster
+- If your metrics server is installed correctly, you will be able to run `kubectl top pods` and `kubectl top nodes` to get pod and node metrics of your cluster.
 
-# set up prometheus-server
+# Configure Prometheus to collect cluster metrics
 
-If you have not already, install [Helm](https://helm.sh/). Helm is a repository of published yaml files that are used to configure deployments used in kubernetes
+If you have not already, install [Helm](https://helm.sh/). Helm is a repository of published yaml files that are used to configure deployments used in Kubernetes.
 
-add the prometheus helm chart to your helm repo
+Add the Prometheus Helm chart to your Helm repo
 `helm repo add prometheus-community https://prometheus-community.github.io/helm-charts`
 
-- you can check if the helm chart has been sucessfully added by running `helm list` in you CLI
+- you can check if the Helm chart has been sucessfully added by running `helm list` in you CLI
 
-install prometheus to your kubernetes cluster
+Install Prometheus to your Kubernetes cluster.
 `helm install prometheus prometheus-community/prometheus`
 
-- if you run `kubectl get all` you should see the deployments, configmaps, services prometheus has installed
-- if you are running kubernetes on docker-desktop, you will not be able to current access the prometheus-server api that is hosted on port 9090. This is because we are running kubernetes in a containerized environment. To work around this, we will open up a **nodeport** service that will act as a middle man to set up a connection with the prometheus server with the outside world
+- If you run `kubectl get all` you should see the deployments, configmaps, services Prometheus has installed.
+- If you are running Kubernetes on docker-desktop, you will not be able to current access the Prometheus server API that is hosted on port 9090. This is because we are running Kubernetes in a containerized environment. To work around this, we will open up a **nodeport** service that will act as a middle man to set up a connection with the prometheus server with the outside world
 - `kubectl apply -f https://github.com/oslabs-beta/KubeSentry/Yamlfiles/prometheus-nodeport.yaml`
-- now you should be able to access the prometheus server api via `localhost:31302`
+- Now you should be able to access the Prometheus server API via `localhost:31302`
 
 # instrument your application
 
@@ -79,7 +83,7 @@ app.get('/metrics', async (req, res) => {
 });
 ```
 
-as an alternative, you can install [express-prom-bundle](https://www.npmjs.com/package/express-prom-bundle) which grants you the **metricsMiddleware** to expose all your metrics to the /metrics endoint with one line
+As an alternative, you can install [express-prom-bundle](https://www.npmjs.com/package/express-prom-bundle) which grants you the **metricsMiddleware** to expose all your metrics to the /metrics endoint with one line.
 
 ```js
 const promBundle = require('express-prom-bundle');
@@ -89,13 +93,13 @@ const metricsMiddleware = promBundle({ includePath: true });
 app.use(metricsMiddleware);
 ```
 
-# create an image of your application
+# Create an image of your application
 
-Build an image of your application to be deployed on kubernetes
+Build an image of your application to be deployed on Kubernetes.
 
-# deploy your application on kubernetes
+# Deploy your application on Kubernetes
 
-Create a deployment yaml file to deploy your application. This will handle any horizontal scaling required for your app
+Create a deployment yaml file to deploy your application. This will handle any horizontal scaling required for your app.
 
 > Example of a deployment configuration yaml file
 
@@ -103,37 +107,37 @@ Create a deployment yaml file to deploy your application. This will handle any h
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mitch-tests
-  namespace: mitch-tests #optional. Will create in current namespace if left out
+  name: sentry-tests
+  namespace: sentry-tests #optional. Will create in current namespace if left out
 spec:
   selector:
     matchLabels:
-      app: mitch
+      app: sentry
   replicas: 4
   template:
     metadata:
       labels:
-        app: mitch
+        app: sentry
     spec:
       containers:
-        - name: mitch-test
-          image: mitchtest4:1.0 #application image
+        - name: sentry-test
+          image: sentrytest4:1.0 #application image
           ports:
             - containerPort: 3000
 ```
 
-run `kubectl apply -f path/to/deployment.yaml` to deploy your application
+Run `kubectl apply -f path/to/deployment.yaml` to deploy your application.
 
-create a service yaml configuration to handle the loadbalancing of your applications
+Create a service yaml configuration to handle load balancing for your applications:
 
 ```yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: mitchtest-nodeport
+  name: sentrytest-nodeport
 spec:
   selector:
-    app: mitch #must match the label of the pod
+    app: sentry #must match the label of the pod
   ports:
     - name: web
       port: 3000 #port to access the service node
@@ -142,11 +146,11 @@ spec:
   type: NodePort
 ```
 
-run `kubectl apply -f path/to/service.yaml` to deploy your application
+Run `kubectl apply -f path/to/service.yaml` to deploy your application.
 
-now you should be able to access your application at `localhost:30011`
+Now you should be able to access your application at `localhost:30011`
 
-# Configure prometheus to scrape metrics
+# Configure Prometheus to scrape metrics
 
 Add scrape jobs for your application and the metrics server. Learn more at [Prometheus](https://prometheus.io/docs/prometheus/latest/getting_started/)
 
@@ -165,9 +169,9 @@ scrape_configs:
   - job_name: 'kubernetes-metrics'
     static_configs:
       - targets: ['metrics-server.kube-system.svc.cluster.local:443']
-  - job_name: 'mitch-test'
+  - job_name: 'sentry-test'
     static_configs:
-      - targets: ['mitchtest-nodeport.default.svc.cluster.local:3000']
+      - targets: ['sentrytest-nodeport.default.svc.cluster.local:3000']
   - job_name: prometheus
     static_configs:
       - targets: [localhost:9090]
@@ -175,15 +179,17 @@ scrape_configs:
 
 # The Kube Sentry
 
+```
 git clone
 npm install
 npm run
-localhost:3000 should display you kubernetes cluster
+```
+http://localhost:3000/dashboard should display your Kubernetes cluster.
 
-# Set up the alermanager
+# Set up the Alert Manager
 
-coming soon......
+Coming soon!
 
-# LEARN MORE
+# Learn More
 
-head over the kubesentry.net
+Head over to kubesentry.net!
