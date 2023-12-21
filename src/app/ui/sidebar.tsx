@@ -12,11 +12,11 @@ export default function SideBar() {
     <div className='flex h-full flex-col px-3 py-4 md:px-2'>
       <div className='logo-wrapper flex gap-5 items-center mb-4'>
         <Image
-          className='ml-3'
-          src='/kubesentrylogo.png'
+          className='ml-3 rounded-md'
+          src='/SentryBot_sm.png'
           alt='Kubesentry logo'
-          width={80}
-          height={80}
+          width={100}
+          height={100}
         />
         <div className='font-bold text-3xl text-blue-400'>{appName}</div>
       </div>
