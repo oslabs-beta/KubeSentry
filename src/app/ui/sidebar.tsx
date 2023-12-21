@@ -1,10 +1,12 @@
 'use client';
-import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
 export default function SideBar() {
   const appName = 'Kube Sentry';
+
+  // Style for each item on the sidebar
+  const sidebarItemClass = 'flex h-12 grow items-center justify-center gap-2 rounded-sm bg-secondaryDark p-1 text-sm font-medium hover:bg-thirdDark hover:text-white md:flex-none md:justify-start md:p-2 md:px-3'
 
   return (
     <div className='flex h-full flex-col px-3 py-4 md:px-2'>
@@ -16,15 +18,15 @@ export default function SideBar() {
           width={80}
           height={80}
         />
-        <div className='font-bold text-lg text-blue-400'>{appName}</div>
+        <div className='font-bold text-3xl text-blue-400'>{appName}</div>
       </div>
-      <div className='flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2'>
+      <div className='flex grow flex-row justify-between space-x-1 md:flex-col md:space-x-0 md:space-y-1.5'>
         <div>
           <Link
             href='/dashboard'
             //flex, height 64px, grow: fill entire element space, justify-center: center on main axis, gap: 0.5rem between flexitems, rounded-md: border radius, bg: background color, p: padding 0.75rem,
             //md: on medium size screens and larger (mid-width 768px)
-            className='flex h-12 grow items-center justify-center gap-2 rounded-md bg-secondaryDark p-3 text-sm font-medium hover:bg-thirdDark hover:text-white md:flex-none md:justify-start md:p-2 md:px-3'
+            className={sidebarItemClass}
           >
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -45,7 +47,7 @@ export default function SideBar() {
         <div>
           <Link
             href='/dashboard/pods'
-            className='flex h-12 grow items-center justify-center gap-2 rounded-md bg-secondaryDark p-3 text-sm font-medium hover:bg-thirdDark hover:text-white md:flex-none md:justify-start md:p-2 md:px-3'
+            className={sidebarItemClass}
           >
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -66,7 +68,7 @@ export default function SideBar() {
         <div>
           <Link
             href='/dashboard/status'
-            className='flex h-12 grow items-center justify-center gap-2 rounded-md bg-secondaryDark p-3 text-sm font-medium hover:bg-thirdDark hover:text-white md:flex-none md:justify-start md:p-2 md:px-3'
+            className={sidebarItemClass}
           >
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -87,7 +89,7 @@ export default function SideBar() {
         <div>
           <Link
             href='/dashboard/resource'
-            className='flex h-12 grow items-center justify-center gap-2 rounded-md bg-secondaryDark p-3 text-sm font-medium hover:bg-thirdDark hover:text-white md:flex-none md:justify-start md:p-2 md:px-3'
+            className={sidebarItemClass}
           >
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -110,7 +112,7 @@ export default function SideBar() {
         <div>
           <Link
             href='/dashboard/report'
-            className='flex h-12 grow items-center justify-center gap-2 rounded-md bg-secondaryDark p-3 text-sm font-medium hover:bg-thirdDark hover:text-white md:flex-none md:justify-start md:p-2 md:px-3'
+            className={sidebarItemClass}
           >
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -177,7 +179,7 @@ export default function SideBar() {
         <div>
           <Link
             href='/dashboard/alert'
-            className='flex h-12 grow items-center justify-center gap-2 rounded-md bg-secondaryDark p-3 text-sm font-medium hover:bg-thirdDark hover:text-white md:flex-none md:justify-start md:p-2 md:px-3 '
+            className={sidebarItemClass}
           >
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -218,4 +220,3 @@ export default function SideBar() {
     </div>
   );
 };
-

@@ -45,9 +45,7 @@ A value close to 1 would indicate that the disk was almost continuously busy wit
 In here we are returning an average rate of X milliseconds of disk I/O time per second.
 */
 
-const IO_PER_SECOND_QUERY = `
-rate(node_disk_io_time_seconds_total[1m])
-`;
+// const IO_PER_SECOND_QUERY = `rate(node_disk_io_time_seconds_total[1m])`;
 
 /*
 The rate of DNS requests (per second) over the past 5 minutes using either
@@ -56,12 +54,10 @@ depending on which one is available.
 So, the final output of your query will be the total rate of DNS requests
 handled per second, grouped by protocol, over the past 5 minutes.
 */
-const DNS_RATE_REQUEST =
-`
-sum(rate(coredns_dns_request_count_total[5m])) by (proto)
-or
-sum(rate(coredns_dns_requests_total[5m])) by (proto)
-`
+const DNS_RATE_REQUEST = `sum(rate(coredns_dns_requests_total[5m])) by (proto)`
+
+const DNS_RESPONSE_REQUEST = `sum(rate(coredns_dns_responses_total[5m])) by (proto)`
+
 
 export default function Page() {
 
@@ -82,8 +78,6 @@ export default function Page() {
         />
       </div>
 
-      <h1 className="text-3xl font-bold mt-4">Sentry Dashboard</h1>
-
       <div className="dashboard-wrapper flex flex-col">
         <h3>Resource Metrics</h3>
         <div className='flex'>
@@ -97,16 +91,13 @@ export default function Page() {
             <TimeSeriesPlot query={ MEM_QUERY } title={'RAM Usage'} />
           </div>
         </div>
-        <h3>Others</h3>
-        <div className='flex'>
-          <div style={style}>
-            <TimeSeriesPlot query={ IO_PER_SECOND_QUERY } title={'IO per sec'} />
-          </div>
-        </div>
         <h3>Network Metrics</h3>
         <div className='flex'>
           <div style={style}>
             <TimeSeriesPlot query={ DNS_RATE_REQUEST } title={'DNS Request per 5m'} />
+          </div>
+          <div style={style}>
+            <TimeSeriesPlot query={ DNS_RESPONSE_REQUEST } title={'DNS Responses per 5m'} />
           </div>
         </div>
       </div>

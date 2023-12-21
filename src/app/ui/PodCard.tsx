@@ -4,6 +4,12 @@ import Modal from './PodModal';
 import { PodItem } from '../../../types/types';
 
 
+const statusColorMap: Record<string,string> = {
+  'Running': "text-green-600",
+  'Pending': "text-red-700"
+}
+
+
 //Each individual PodCard component which accepts Poditem and a handleClick function as props
 export function PodCard(props: { pod: PodItem; handleClick: Function }) {
   //destructuring props
@@ -30,8 +36,10 @@ export function PodCard(props: { pod: PodItem; handleClick: Function }) {
     setIsModalOpen(!isModalOpen);
   };
 
+  const statusColor = statusColorMap[status] || 'text-red-700';
+
   return (
-    <article className="relative flex flex-col justify-between h-64 rounded-3xl overflow-hidden shadow-lg border-solid bg-secondaryDark shadow-lg ">
+    <article className="relative flex flex-col justify-between h-56 rounded-3xl overflow-hidden shadow-lg border-solid bg-secondaryDark shadow-lg ">
       {/* trash can icon for deleting the pod  */}
       <button
         onClick={() => handleClick(name, namespace)}
@@ -56,8 +64,8 @@ export function PodCard(props: { pod: PodItem; handleClick: Function }) {
         <div className="font-bold text-base mb-2 text-center text-slate-100">
           {name}
         </div>
-        <p className="text-gray-700 text-sm text-center">{namespace}</p>
-        <p className="text-gray-700 text-sm text-center text-green-600">
+        <p className="text-gray-500 text-base text-center">{namespace}</p>
+        <p className={"text-base text-center " + statusColor}>
           {status}
         </p>
       </div>
