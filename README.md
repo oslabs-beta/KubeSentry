@@ -211,5 +211,5 @@ Coming soon!
 
 # Learn More
 
-Head over to kubesentry.net!
+Head over to kubesentry.app!
 
